@@ -1,6 +1,6 @@
 {
   "name": "evp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Existential Value Proposition (EVP) generator for Claude Code. Uses the Schwartz awareness model (unaware, problem-aware, solution-aware, product-aware, most-aware) to produce 5 EVP variants for any audience tier, plus a structured 3-tier brief. Based on the JMC EVP course.",
   "author": "Jay Mount Consulting",
   "license": "MIT",

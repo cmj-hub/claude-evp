@@ -1,0 +1,42 @@
+{
+  "operator": {
+    "name": "Your Name",
+    "company": "Your Company"
+  },
+
+  "icp": {
+    "segment": "Series-B SaaS, $20-50M ARR, PLG motion, US/EU"
+  },
+
+  "psp": {
+    "primary_pain": "Pipeline gap; existing demand-gen motion isn't producing enough SQLs",
+    "vocabulary": ["pipeline gap", "SDR ramp", "demand-gen motion isn't producing"]
+  },
+
+  "evp_drafts": {
+    "tier_2_problem_aware": {
+      "primary": "If your demand-gen motion isn't producing SQLs, hiring 2 more SDRs won't fix it — the problem is upstream.",
+      "proof": "62% of Series-B SaaS hit this within 18 months of funding."
+    },
+    "tier_3_solution_aware": {
+      "primary": "For Series-B SaaS in a pipeline gap, we ship 14+ SQLs/month without hiring 2 more SDRs.",
+      "outcome": "14+ SQLs per month",
+      "tradeoff": "without hiring 2 more SDRs",
+      "proof": "Series-B SaaS hit 14 SQLs in 30 days from a PSP rewrite."
+    },
+    "tier_4_product_aware": {
+      "primary": "Versus generic agencies: targeted outbound CPM is $640 vs $2,800. Same volume, 4x efficiency.",
+      "competitor_referenced": "generic agencies",
+      "proof": "Compared CPM across 12 programs in 2025-2026."
+    }
+  },
+
+  "competitors": [
+    { "name": "Generic outbound agency", "axis": "CPM efficiency" },
+    { "name": "AI SDR vendor", "axis": "Reply quality vs volume" },
+    { "name": "In-house SDR build", "axis": "Time-to-payback" }
+  ],
+
+  "primary_outreach_tier": 3,
+  "refresh_cadence_days": 90
+}
