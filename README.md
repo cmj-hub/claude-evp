@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./assets/header.svg" alt="claude-evp — EVP Generator (Schwartz tiers)" width="100%">
+</p>
+
 # claude-evp
 
 > Replace a $10K-15K positioning sprint with the Schwartz-tier EVP
@@ -13,9 +17,12 @@ No LLM calls inside the skill. Deterministic scoring catches abstract
 verbs, missing metrics, and tier-mismatched lines.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/cmj-hub/claude-evp?style=social)](https://github.com/cmj-hub/claude-evp)
 ![Sub-skills](https://img.shields.io/badge/Sub--skills-4-blue)
 ![Scripts](https://img.shields.io/badge/Scripts-1-green)
 ![No LLM inside](https://img.shields.io/badge/LLM--inside-no-success)
+> **Demo GIF coming soon** — install + onboarding + first run walkthrough.
+
 
 ## What it does
 
