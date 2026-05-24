@@ -1,0 +1,12 @@
+{
+  "title": "EVP Generator",
+  "subtitle": "Schwartz-tier value propositions in 22 words",
+  "accent_color": "#00D4FF",
+  "tagline_top": "JMC Skill Pack",
+  "demo_steps": [
+    { "duration_ms": 1200, "title": "Stage",   "body": "Schwartz awareness tier 1 through 5" },
+    { "duration_ms": 1200, "title": "Frame",   "body": "Tier-appropriate angle plus mechanism" },
+    { "duration_ms": 1200, "title": "Compose", "body": "Twenty-two word existential value prop" },
+    { "duration_ms": 1200, "title": "Test",    "body": "Resonance check against ICP language" }
+  ]
+}
