@@ -30,7 +30,7 @@ verbs, missing metrics, and tier-mismatched lines.
 
 ```mermaid
 graph LR
-    A[/evp] --> B{Kickoff: state check}
+    A["/evp"] --> B{Kickoff: state check}
     B -->|First time| C[Onboarding<br/>brand-config + SOUL]
     B -->|Have config| D[Craft / Brief]
     C --> D

@@ -1,12 +1,24 @@
 {
   "title": "EVP Generator",
-  "subtitle": "Schwartz-tier value propositions in 22 words",
-  "accent_color": "#00D4FF",
+  "subtitle": "Schwartz-tier value props in 22 words",
+  "accent_color": "#CC4714",
   "tagline_top": "JMC Skill Pack",
-  "demo_steps": [
-    { "duration_ms": 1200, "title": "Stage",   "body": "Schwartz awareness tier 1 through 5" },
-    { "duration_ms": 1200, "title": "Frame",   "body": "Tier-appropriate angle plus mechanism" },
-    { "duration_ms": 1200, "title": "Compose", "body": "Twenty-two word existential value prop" },
-    { "duration_ms": 1200, "title": "Test",    "body": "Resonance check against ICP language" }
-  ]
+  "command": "/evp",
+  "user_prompt": "craft a tier-3 EVP for fintech CFOs",
+  "response_lines": [
+    "Loading PSP + brand voice...",
+    "Schwartz tier 3: solution-aware, not product-aware",
+    "Composing <ICP> · <pain> · <outcome> · <tradeoff>",
+    "Scoring against abstract-verb + metric rubric...",
+    "EVP ready · score 84 / 100"
+  ],
+  "artifact": {
+    "label": "evp/tier-3.md",
+    "lines": [
+      "For fintech CFOs whose close cycle stalls",
+      "at audit-trail gaps, we ship a 5-day",
+      "close in 30 days without ripping out",
+      "your GL or retraining your team."
+    ]
+  }
 }
