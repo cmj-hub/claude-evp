@@ -29,7 +29,7 @@ verbs, missing metrics, and tier-mismatched lines.
 ## What it does
 
 ```mermaid
-graph LR
+graph TB
     A["/evp"] --> B{Kickoff: state check}
     B -->|First time| C[Onboarding<br/>brand-config + SOUL]
     B -->|Have config| D[Craft / Brief]
