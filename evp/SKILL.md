@@ -1,7 +1,7 @@
 ---
 name: evp
 description: >
-  Existential Value Proposition (EVP) generator for B2B operators. Uses the
+  Early Value Proposition (EVP) generator for B2B operators. Uses the
   Eugene Schwartz awareness model (unaware, problem-aware, solution-aware,
   product-aware, most-aware) to produce a sharp, 22-word EVP for each
   awareness tier — plus a structured 3-tier EVP brief documenting the
@@ -17,9 +17,9 @@ allowed-tools:
   - Grep
 ---
 
-# EVP — Existential Value Proposition Generator
+# EVP — Early Value Proposition Generator
 
-A Claude Code skill that generates **Existential Value Propositions**
+A Claude Code skill that generates **Early Value Propositions**
 (EVPs) — the one sentence that answers: *"For <ICP> in <pain>, we're
 the <one team> that does <specific outcome> without <obvious
 tradeoff>."*

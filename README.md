@@ -7,7 +7,7 @@
 > Replace a $10K-15K positioning sprint with the Schwartz-tier EVP
 > framework, as a Claude Code skill pack.
 
-Generates **Existential Value Propositions** — the 22-word line that
+Generates **Early Value Propositions** — the 22-word line that
 says *"For <ICP> in <pain>, we ship <specific outcome> without
 <obvious tradeoff>."* Uses the **Eugene Schwartz 5-tier awareness
 model** so you get a different line for each tier of your audience.
