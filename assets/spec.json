@@ -1,4 +1,5 @@
 {
+  "renderer_version": 2,
   "title": "EVP Generator",
   "subtitle": "Schwartz-tier value props in 22 words",
   "accent_color": "#CC4714",
@@ -8,9 +9,9 @@
   "response_lines": [
     "Loading PSP + brand voice...",
     "Schwartz tier 3: solution-aware, not product-aware",
-    "Composing <ICP> · <pain> · <outcome> · <tradeoff>",
+    "Composing <ICP> \u00b7 <pain> \u00b7 <outcome> \u00b7 <tradeoff>",
     "Scoring against abstract-verb + metric rubric...",
-    "EVP ready · score 84 / 100"
+    "EVP ready \u00b7 score 84 / 100"
   ],
   "artifact": {
     "label": "evp/tier-3.md",
