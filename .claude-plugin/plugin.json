@@ -1,8 +1,10 @@
 {
   "name": "evp",
-  "version": "0.2.1",
-  "description": "Early Value Proposition (EVP) generator for Claude Code. Uses the Schwartz awareness model (unaware, problem-aware, solution-aware, product-aware, most-aware) to produce 5 EVP variants for any audience tier, plus a structured 3-tier brief. Based on the JMC EVP course.",
-  "author": { "name": "Jay Mount Consulting" },
+  "version": "0.3.0",
+  "description": "An Early Value Proposition is a \u226422-word line matched to a Schwartz awareness tier. Same product, five lines, because the unaware buyer and the vendor-comparing buyer are not the same reader.",
+  "author": {
+    "name": "Jay Mount Consulting"
+  },
   "license": "MIT",
-  "homepage": "https://github.com/cmj-hub/claude-evp"
+  "homepage": "https://jaymountconsulting.com/skills"
 }

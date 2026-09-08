@@ -1,0 +1,1 @@
+For Series-B SaaS in a pipeline gap, we ship 14+ SQLs per month without hiring 2 more SDRs.
