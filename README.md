@@ -4,9 +4,18 @@
 
 # claude-evp
 
-> Replace a $10K–15K positioning sprint with a 22-word line per Schwartz awareness tier — as an agent skill pack.
+> Same product. Five readers. Five lines. Twenty-two words each.
 
 An Early Value Proposition is a ≤22-word line matched to a Schwartz awareness tier. Same product, five lines, because the unaware buyer and the vendor-comparing buyer are not the same reader.
+
+Most operators write the line they would buy.
+That is a Tier-5 line.
+Most of the market is not there.
+
+We scored a specific T3 line at **100**.
+"We help companies improve their growth and optimize outcomes" scored **59**.
+
+The scorer is Python in this repo. No LLM. No paid API.
 
 The build guide teaches the framework to a human. This pack teaches the same framework to an agent.
 
@@ -19,41 +28,24 @@ The build guide teaches the framework to a human. This pack teaches the same fra
   <img src="./assets/demo.gif" alt="claude-evp — terminal demo of scoring a Tier-3 EVP" width="100%">
 </p>
 
-Verified: strong T3 EVP → **100/100**. "We help companies improve their growth and optimize outcomes." → **59/100**. Catches abstract verbs, missing metrics, missing tradeoffs, tier mismatch.
-
 ## Install
 
-Two commands. Works in Claude Code, Cursor, Codex, Grok, Copilot, Windsurf, Cline, OpenCode, Antigravity, Goose, Continue, Roo, and the rest of the [skills CLI](https://skills.sh) agent list.
+Two commands. Claude Code, Cursor, Codex, Grok, Copilot, Windsurf, Cline, OpenCode, and the rest of the [skills CLI](https://skills.sh) list.
 
 ```bash
 npx skills add cmj-hub/claude-evp --all -g --full-depth
 ```
 
 ```text
-/plugin marketplace add cmj-hub/claude-evp
+/plugin marketplace add cmj-hub/gtm-operator-skills
 /plugin install evp
 ```
 
-The first line is the cross-harness install. The second is Claude Code's plugin (slash commands + reviewer agents).
-
-npm (from GitHub — this pack is not on npmjs.com):
-
-```bash
-npm install github:cmj-hub/claude-evp
-npx jmc-evp
-```
-
-`npx jmc-evp` runs the same installer as `curl` below.
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/cmj-hub/claude-evp/main/install.sh | bash
-```
-
-Windows: `iwr https://raw.githubusercontent.com/cmj-hub/claude-evp/main/install.ps1 -useb | iex`
+Also: `npm install github:cmj-hub/claude-evp` then `npx jmc-evp`. Or `curl -fsSL https://raw.githubusercontent.com/cmj-hub/claude-evp/main/install.sh | bash`.
 
 ## What you walk out with in 15 minutes
 
-Artifact: three tier lines from the sample PSP (`examples/t3.good.txt`). Score them, then write yours.
+Artifact: `examples/t3.good.txt`.
 
 ```bash
 python3 scripts/score_evp.py \
@@ -62,55 +54,46 @@ python3 scripts/score_evp.py \
 python3 scripts/score_evp.py --evp "We help companies improve their growth and optimize outcomes." --tier 3
 ```
 
-One loop. One ICP. Example data. Then do yours.
+Three tier lines from the sample PSP. Then yours.
 
 ## What this pack will not do
 
-- It will not pick this quarter's PSP.
-- It will not invent proof you did not supply.
-- It will not write five market-ready ads from a blank page.
-- Operator Pass is not required to run the scorer.
+It will not pick this quarter's PSP.
+It will not invent proof you did not hand it.
+It will not write five ads from a blank page.
 
 This pack drafts and scores. It will not pick this quarter's PSP, ingest your CRM, or update when Gmail changes the spam window. That is the course + Operator Pass: the catalog that keeps moving, the tools that stay calibrated, the Friday room where you bring the artifact.
 
-## Also in the pack
-
-| Piece | Job |
-|---|---|
-| `evp` orchestrator | Craft / brief / route |
-| `scripts/score_evp.py` | Length, outcome, tradeoff, ICP, tier-fit |
-| `evp-brief` | Tiers 2 / 3 / 4 side by side |
-
-Sub-skills stay in the repo. First run is the loop above, not the operating system.
-
 ## Why 22 words?
 
-Long enough for ICP + pain + outcome + tradeoff. Short enough to drop into a cold-email third line or a hero. If it does not fit, you have two claims. Cut one.
+Long enough for ICP, pain, outcome, and one tradeoff.
+Short enough to sit in a cold-email third line.
+If it does not fit, you have two claims. Cut one.
 
 ## Which Schwartz tier should I write first?
 
-Most B2B buyers live in Tiers 2–4. Write those three. Tier 5 is a direct ask; most operators start there (their internal view) and wonder why nothing lands. Unaware (Tier 1) is a pain reveal, not a product sentence.
+Tiers 2–4.
+That is where B2B buyers live.
+Tier 5 is a direct ask — your internal product view. Unaware (Tier 1) is a pain reveal, not a product sentence.
 
 ## Do I need Operator Pass to use this?
 
-No. The pack, the scorer, and the sample are MIT. Pass is the catalog, the calibrated endpoints, and the Friday room — compounding, not a gate on the 22-word line.
+No. The pack, the scorer, and the sample are MIT. Pass is compounding: the catalog, the calibrated tools, the Friday room.
 
 ## Suite, course, Operator Pass
 
-- Suite: [https://jaymountconsulting.com/skills](https://jaymountconsulting.com/skills)
+- Suite: [gtm-operator-skills](https://github.com/cmj-hub/gtm-operator-skills) · [jaymountconsulting.com/skills](https://jaymountconsulting.com/skills)
 - Course: [EVP Generator](https://jaymountconsulting.com/learn/courses/evp-generator)
-- Operator Pass: [https://jaymountconsulting.com/operator-pass](https://jaymountconsulting.com/operator-pass)
+- Operator Pass: [jaymountconsulting.com/operator-pass](https://jaymountconsulting.com/operator-pass)
 
 Founder: $97/mo billed annually ($1,164/yr), locked for life if bought before October 31, 2026. After that: $197/mo billed annually ($2,364/yr), no lock.
 
 ## Companion packs
 
-- **[Pain Signal Profile](https://github.com/cmj-hub/claude-psp)** — `claude-psp`
-- **[Signal-anchored cold email](https://github.com/cmj-hub/claude-cold-email)** — `claude-cold-email`
-- **[Four-pillar founder brand](https://github.com/cmj-hub/claude-founder-brand)** — `claude-founder-brand`
-- **[Pricing surgery](https://github.com/cmj-hub/claude-pricing)** — `claude-pricing`
-- **[Breakthrough Advertising (Schwartz)](https://github.com/cmj-hub/claude-breakthrough-advertising)** — `claude-breakthrough-advertising`
-- **[Johanson / Stanley tutorial email](https://github.com/cmj-hub/claude-johanson-stanley)** — `claude-johanson-stanley`
+- [claude-psp](https://github.com/cmj-hub/claude-psp) — five-part buying brief
+- [claude-cold-email](https://github.com/cmj-hub/claude-cold-email) — signal, pain, EVP, binary ask
+- [claude-founder-brand](https://github.com/cmj-hub/claude-founder-brand) — Pillar / Proof / Process / Person
+- [claude-pricing](https://github.com/cmj-hub/claude-pricing) — three-tier contrast + pocket-price leaks
 
 ## License
 
@@ -118,4 +101,4 @@ MIT. See [LICENSE](./LICENSE).
 
 ## About
 
-Built by [Jay Mount Consulting](https://jaymountconsulting.com). Public build: [https://jaymountconsulting.com/build](https://jaymountconsulting.com/build). Skill suite: [https://jaymountconsulting.com/skills](https://jaymountconsulting.com/skills).
+Built by [Jay Mount Consulting](https://jaymountconsulting.com).
