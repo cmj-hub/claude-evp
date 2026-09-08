@@ -1,21 +1,18 @@
 <p align="center">
-  <img src="./assets/header.svg" alt="claude-evp — Early Value Proposition (Schwartz tiers)" width="100%">
+  <img src="./assets/header.svg" alt="claude-evp — Early Value Proposition, a 22-word line matched to a Schwartz awareness tier" width="100%">
 </p>
 
 # claude-evp
 
-> Same product. Five readers. Five lines. Twenty-two words each.
+> Same product. Five readers. Twenty-two words each. Because they are not standing in the same place.
 
 An Early Value Proposition is a ≤22-word line matched to a Schwartz awareness tier. Same product, five lines, because the unaware buyer and the vendor-comparing buyer are not the same reader.
 
-Most operators write the line they would buy.
-That is a Tier-5 line.
-Most of the market is not there.
+You have been writing one line — the line *you* would buy. That is a Most-Aware line. Most of the people who land on your page are not there. They are still naming the pain, or comparing categories, or lining you up against a vendor they already know.
 
-We scored a specific T3 line at **100**.
-"We help companies improve their growth and optimize outcomes" scored **59**.
+Eugene Schwartz's awareness model is the mechanism: unaware, problem-aware, solution-aware, product-aware, most-aware. One product. Five openings. The scorer in this repo checks length, outcome, tradeoff, ICP, and tier-fit.
 
-The scorer is Python in this repo. No LLM. No paid API.
+A specific Tier-3 line scored **100**. "We help companies improve their growth and optimize outcomes" scored **59**. The Python is in `scripts/score_evp.py`. No LLM. No paid API.
 
 The build guide teaches the framework to a human. This pack teaches the same framework to an agent.
 
@@ -25,12 +22,16 @@ The build guide teaches the framework to a human. This pack teaches the same fra
 ![Install](https://img.shields.io/badge/install-npx%20skills-blue)
 
 <p align="center">
-  <img src="./assets/demo.gif" alt="claude-evp — terminal demo of scoring a Tier-3 EVP" width="100%">
+  <img src="./assets/demo.gif" alt="claude-evp — scoring a 22-word Tier-3 Early Value Proposition 100 vs 59" width="100%">
 </p>
+
+## What this replaces
+
+A $10K–15K positioning sprint's first output: one hero line, written from inside the building.
 
 ## Install
 
-Two commands. Claude Code, Cursor, Codex, Grok, Copilot, Windsurf, Cline, OpenCode, and the rest of the [skills CLI](https://skills.sh) list.
+Two commands. Works in Claude Code, Cursor, Codex, Grok, Copilot, Windsurf, Cline, OpenCode, and the rest of the [skills CLI](https://skills.sh) list.
 
 ```bash
 npx skills add cmj-hub/claude-evp --all -g --full-depth
@@ -54,31 +55,25 @@ python3 scripts/score_evp.py \
 python3 scripts/score_evp.py --evp "We help companies improve their growth and optimize outcomes." --tier 3
 ```
 
-Three tier lines from the sample PSP. Then yours.
+Three tier lines from the sample Pain Signal Profile. Then yours.
 
 ## What this pack will not do
 
-It will not pick this quarter's PSP.
-It will not invent proof you did not hand it.
-It will not write five ads from a blank page.
+It will not pick this quarter's PSP. It will not invent proof you did not hand it. It will not write five ads from a blank page.
 
 This pack drafts and scores. It will not pick this quarter's PSP, ingest your CRM, or update when Gmail changes the spam window. That is the course + Operator Pass: the catalog that keeps moving, the tools that stay calibrated, the Friday room where you bring the artifact.
 
 ## Why 22 words?
 
-Long enough for ICP, pain, outcome, and one tradeoff.
-Short enough to sit in a cold-email third line.
-If it does not fit, you have two claims. Cut one.
+Long enough for ICP, pain, one outcome, and one tradeoff. Short enough to sit in a cold-email third line or a hero. If it does not fit, you have two claims. Cut one.
 
 ## Which Schwartz tier should I write first?
 
-Tiers 2–4.
-That is where B2B buyers live.
-Tier 5 is a direct ask — your internal product view. Unaware (Tier 1) is a pain reveal, not a product sentence.
+Tiers 2–4. That is where B2B buyers live. Tier 5 is a direct ask — your internal product view. Unaware (Tier 1) is a pain reveal, not a product sentence.
 
 ## Do I need Operator Pass to use this?
 
-No. The pack, the scorer, and the sample are MIT. Pass is compounding: the catalog, the calibrated tools, the Friday room.
+No. The pack, the scorer, and the sample are MIT. Pass is compounding: the catalog, the calibrated tools, the Friday room. It is not a gate on the 22-word line.
 
 ## Suite, course, Operator Pass
 
@@ -90,10 +85,10 @@ Founder: $97/mo billed annually ($1,164/yr), locked for life if bought before Oc
 
 ## Companion packs
 
-- [claude-psp](https://github.com/cmj-hub/claude-psp) — five-part buying brief
+- [claude-psp](https://github.com/cmj-hub/claude-psp) — Pain Signal Profile, the five-part buying brief
 - [claude-cold-email](https://github.com/cmj-hub/claude-cold-email) — signal, pain, EVP, binary ask
 - [claude-founder-brand](https://github.com/cmj-hub/claude-founder-brand) — Pillar / Proof / Process / Person
-- [claude-pricing](https://github.com/cmj-hub/claude-pricing) — three-tier contrast + pocket-price leaks
+- [claude-pricing](https://github.com/cmj-hub/claude-pricing) — three-tier contrast and pocket-price leaks
 
 ## License
 
