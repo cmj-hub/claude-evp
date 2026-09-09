@@ -2,10 +2,10 @@
 name: evp-craft
 description: Generate 3 EVP variants for a single Schwartz awareness tier. Each variant follows the 22-word shape and explores a different emphasis (outcome / tradeoff / ICP). Loaded by the main evp skill when the user wants to craft EVPs for a specific tier.
 user-invocable: false
-allowed-tools:
-  - Read
-  - Write
+allowed-tools: Read Write
   - Grep
+license: MIT
+
 ---
 
 # EVP Craft — sub-skill
@@ -136,4 +136,3 @@ Rationale: <one sentence>
 
 - `../../evp/SKILL.md` — the framework
 - The **EVP** course in The Compounding Engine:
-  [jaymountconsulting.com/learn/courses/evp-generator](https://jaymountconsulting.com/learn/courses/evp-generator)

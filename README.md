@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/header.svg" alt="claude-evp — Early Value Proposition, a 22-word line matched to a Schwartz awareness tier" width="100%">
+  <img src="./assets/header.png" alt="claude-evp — Early Value Proposition, a 22-word line matched to a Schwartz awareness tier" width="100%">
 </p>
 
 # claude-evp
@@ -18,6 +18,7 @@ The build guide teaches the framework to a human. This pack teaches the same fra
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/cmj-hub/claude-evp?style=social)](https://github.com/cmj-hub/claude-evp)
+[![skills.sh](https://skills.sh/b/cmj-hub/claude-evp)](https://skills.sh/cmj-hub/claude-evp)
 ![No paid APIs](https://img.shields.io/badge/paid%20APIs-none-success)
 ![Install](https://img.shields.io/badge/install-npx%20skills-blue)
 
@@ -61,7 +62,7 @@ Three tier lines from the sample Pain Signal Profile. Then yours.
 
 It will not pick this quarter's PSP. It will not invent proof you did not hand it. It will not write five ads from a blank page.
 
-This pack drafts and scores. It will not pick this quarter's PSP, ingest your CRM, or update when Gmail changes the spam window. That is the course + Operator Pass: the catalog that keeps moving, the tools that stay calibrated, the Friday room where you bring the artifact.
+This pack drafts and scores. It will not pick this quarter's PSP, ingest your CRM, or update when Gmail changes the spam window. Those are judgement calls and live data. This pack gives you the instrument and the rubric; you bring the account.
 
 ## Why 22 words?
 
@@ -73,15 +74,22 @@ Tiers 2–4. That is where B2B buyers live. Tier 5 is a direct ask — your inte
 
 ## Do I need Operator Pass to use this?
 
-No. The pack, the scorer, and the sample are MIT. Pass is compounding: the catalog, the calibrated tools, the Friday room. It is not a gate on the 22-word line.
+No, and there is no key to enter. The pack, the scorer, and the sample are MIT. If you would rather not install anything, the [EVP Generator](https://jaymountconsulting.com/tools/evp-generator) writes the same line in your browser.
 
-## Suite, course, Operator Pass
+## Free, no signup
 
-- Suite: [gtm-operator-skills](https://github.com/cmj-hub/gtm-operator-skills) · [jaymountconsulting.com/skills](https://jaymountconsulting.com/skills)
-- Course: [EVP Generator](https://jaymountconsulting.com/learn/courses/evp-generator)
-- Operator Pass: [jaymountconsulting.com/operator-pass](https://jaymountconsulting.com/operator-pass)
+- **[EVP Generator](https://jaymountconsulting.com/tools/evp-generator)** — the same job as this pack, hosted. No account, no key.
+- [Early Value Propositions framework](https://jaymountconsulting.com/frameworks/early-value-propositions)
+- [EVP Brief Generator](https://jaymountconsulting.com/tools/evp-brief-generator)
 
-Founder: $97/mo billed annually ($1,164/yr), locked for life if bought before October 31, 2026. After that: $197/mo billed annually ($2,364/yr), no lock.
+## Free, by email
+
+[**Foundation Scorecard**](https://jaymountconsulting.com/foundation-scorecard) — 14 checkpoints on the positioning layer under your GTM, plus a prioritization guide.
+
+That one does ask for an email, and it enrols you in a short follow-up on the same topic. Unsubscribe whenever.
+
+[**The Friday Signal**](https://jaymountconsulting.com/newsletter/signal) — one free edition a week on building GTM systems that compound. No pitch in it.
+
 
 ## Companion packs
 
@@ -97,3 +105,12 @@ MIT. See [LICENSE](./LICENSE).
 ## About
 
 Built by [Jay Mount Consulting](https://jaymountconsulting.com).
+
+## Regenerating the artwork
+
+`assets/social-preview.png` and `assets/header.png` are generated from `assets/spec.json` by a vendored renderer — no CI, no shared workflow, no network beyond the webfonts:
+
+```bash
+node assets/card.mjs assets/spec.json assets/          # social-preview.png + header.png
+npm i playwright-core && node assets/demo.mjs assets/spec.json assets/demo.gif
+```

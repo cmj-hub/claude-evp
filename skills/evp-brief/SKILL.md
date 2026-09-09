@@ -2,10 +2,10 @@
 name: evp-brief
 description: Build a structured 3-tier EVP brief — Tier 2 (problem-aware), Tier 3 (solution-aware), Tier 4 (product-aware) — side-by-side with audience, pain, EVP variants, and proof per tier. Becomes the single source of truth your hero, ads, cold email, and pricing-page pull from. Loaded by the main evp skill when the user wants a full brief.
 user-invocable: false
-allowed-tools:
-  - Read
-  - Write
+allowed-tools: Read Write
   - Grep
+license: MIT
+
 ---
 
 # EVP Brief — sub-skill
@@ -150,4 +150,3 @@ and competitor positioning shifts.
 - `../../evp/SKILL.md` — the framework
 - Sister skill: `evp-craft` for single-tier generation
 - **EVP** course in The Compounding Engine:
-  [jaymountconsulting.com/learn/courses/evp-generator](https://jaymountconsulting.com/learn/courses/evp-generator)
