@@ -150,4 +150,3 @@ and competitor positioning shifts.
 - `../../evp/SKILL.md` — the framework
 - Sister skill: `evp-craft` for single-tier generation
 - **EVP** course in The Compounding Engine:
-  [jaymountconsulting.com/learn/courses/evp-generator](https://jaymountconsulting.com/learn/courses/evp-generator)

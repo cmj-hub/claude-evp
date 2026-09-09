@@ -1,25 +1,5 @@
-{
-  "renderer_version": 2,
-  "title": "EVP Generator",
-  "subtitle": "Schwartz-tier value props in 22 words",
-  "accent_color": "#CC4714",
-  "tagline_top": "JMC Skill Pack",
-  "command": "/evp",
-  "user_prompt": "craft a tier-3 EVP for fintech CFOs",
-  "response_lines": [
-    "Loading PSP + brand voice...",
-    "Schwartz tier 3: solution-aware, not product-aware",
-    "Composing <ICP> \u00b7 <pain> \u00b7 <outcome> \u00b7 <tradeoff>",
-    "Scoring against abstract-verb + metric rubric...",
-    "EVP ready \u00b7 score 84 / 100"
-  ],
-  "artifact": {
-    "label": "evp/tier-3.md",
-    "lines": [
-      "For fintech CFOs whose close cycle stalls",
-      "at audit-trail gaps, we ship a 5-day",
-      "close in 30 days without ripping out",
-      "your GL or retraining your team."
-    ]
-  }
-}
+{ "renderer_version": 3, "title": "EVP Generator",
+  "subtitle": "One line, 22 words, matched to what the buyer already knows",
+  "accent_color": "#CC4714", "tagline_top": "JMC Skill Pack",
+  "proof": "score_evp.py · tier-matched · 22-word cap · no LLM",
+  "cta": "jaymountconsulting.com/tools/evp-generator" }

@@ -136,4 +136,3 @@ Rationale: <one sentence>
 
 - `../../evp/SKILL.md` — the framework
 - The **EVP** course in The Compounding Engine:
-  [jaymountconsulting.com/learn/courses/evp-generator](https://jaymountconsulting.com/learn/courses/evp-generator)
