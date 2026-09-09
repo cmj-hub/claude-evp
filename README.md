@@ -76,14 +76,17 @@ Tiers 2–4. That is where B2B buyers live. Tier 5 is a direct ask — your inte
 
 No, and there is no key to enter. The pack, the scorer, and the sample are MIT. If you would rather not install anything, the [EVP Generator](https://jaymountconsulting.com/tools/evp-generator) writes the same line in your browser.
 
-## Free tools that do this in a browser
+## Free, no signup
 
-No install, no signup, no key.
-
-- **[EVP Generator](https://jaymountconsulting.com/tools/evp-generator)** — the same job as this pack, hosted
+- **[EVP Generator](https://jaymountconsulting.com/tools/evp-generator)** — the same job as this pack, hosted. No account, no key.
 - [Early Value Propositions framework](https://jaymountconsulting.com/frameworks/early-value-propositions)
 - [EVP Brief Generator](https://jaymountconsulting.com/tools/evp-brief-generator)
-- [Foundation Scorecard](https://jaymountconsulting.com/foundation-scorecard)
+
+## Free, by email
+
+[**Foundation Scorecard**](https://jaymountconsulting.com/foundation-scorecard) — 14 checkpoints on the positioning layer under your GTM, plus a prioritization guide.
+
+That one does ask for an email, and it enrols you in a short follow-up on the same topic. Unsubscribe whenever.
 
 
 ## Companion packs
@@ -106,5 +109,6 @@ Built by [Jay Mount Consulting](https://jaymountconsulting.com).
 `assets/social-preview.png` and `assets/header.png` are generated from `assets/spec.json` by a vendored renderer — no CI, no shared workflow, no network beyond the webfonts:
 
 ```bash
-node assets/card.mjs assets/spec.json assets/
+node assets/card.mjs assets/spec.json assets/          # social-preview.png + header.png
+npm i playwright-core && node assets/demo.mjs assets/spec.json assets/demo.gif
 ```
