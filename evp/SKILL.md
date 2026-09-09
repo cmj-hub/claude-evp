@@ -11,10 +11,10 @@ description: >
   pricing pages, and sales-call openings. Triggers on: "write an EVP",
   "value proposition", "elevator pitch", "positioning statement", "hero
   copy", "EVP brief", "what's our angle", "messaging by awareness level".
-allowed-tools:
-  - Read
-  - Write
+allowed-tools: Read Write
   - Grep
+license: MIT
+
 ---
 
 # EVP — Early Value Proposition Generator
