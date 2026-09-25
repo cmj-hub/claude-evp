@@ -84,7 +84,7 @@ No, and there is no key to enter. The pack, the scorer, and the sample are MIT. 
 
 ## Free, by email
 
-[**Foundation Scorecard**](https://jaymountconsulting.com/foundation-scorecard) — 14 checkpoints on the positioning layer under your GTM, plus a prioritization guide.
+[**Growth Audit**](https://jaymountconsulting.com/growth-audit) — where your go-to-market stack is leaking, sent to your inbox.
 
 That one does ask for an email, and it enrols you in a short follow-up on the same topic. Unsubscribe whenever.
 
