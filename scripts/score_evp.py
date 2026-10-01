@@ -27,6 +27,36 @@ from dataclasses import dataclass, field, asdict
 from typing import List, Optional
 
 
+MAX_INPUT_BYTES = 2_000_000
+
+
+def fail_input(message: str) -> None:
+    print(f"error: {message}", file=sys.stderr)
+    raise SystemExit(2)
+
+
+def parse_json(text: str) -> dict:
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError:
+        fail_input("invalid JSON")
+    if not isinstance(data, dict):
+        fail_input("JSON must be an object")
+    return data
+
+
+def read_stdin_text() -> str:
+    raw = sys.stdin.buffer.read(MAX_INPUT_BYTES + 1)
+    if len(raw) > MAX_INPUT_BYTES:
+        fail_input("input is too large")
+    if raw.startswith(b"\xef\xbb\xbf"):
+        raw = raw[3:]
+    try:
+        return raw.decode("utf-8")
+    except UnicodeDecodeError:
+        fail_input("input is not UTF-8 text")
+
+
 ABSTRACT_OUTCOMES = {
     "improve", "optimize", "enhance", "scale", "grow", "drive",
     "boost", "accelerate", "streamline", "transform", "elevate",
@@ -235,14 +265,14 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.stdin:
-        try:
-            data = json.load(sys.stdin)
-        except json.JSONDecodeError as err:
-            print(f"Bad JSON: {err}", file=sys.stderr)
-            return 2
+        data = parse_json(read_stdin_text())
         evp = data.get("evp", "")
+        if not isinstance(evp, str):
+            evp = ""
         tier = data.get("tier")
         icp = data.get("icp")
+        if icp is not None and not isinstance(icp, str):
+            icp = None
     else:
         evp = args.evp
         tier = args.tier
