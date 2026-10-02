@@ -2,7 +2,9 @@
   <img src="./assets/header.png" alt="claude-evp — Early Value Proposition, a 22-word line matched to a Schwartz awareness tier" width="100%">
 </p>
 
-# claude-evp
+# Value proposition
+
+A value proposition is one line that says why this buyer should care. The same product needs a different line for each buyer.
 
 > Same product. Five readers. Twenty-two words each. Because they are not standing in the same place.
 
