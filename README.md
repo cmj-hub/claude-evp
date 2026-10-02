@@ -57,9 +57,13 @@ python3 scripts/score_evp.py \
   --evp "For Series-B SaaS in a pipeline gap, we ship 14+ SQLs per month without hiring 2 more SDRs." \
   --tier 3 --icp "Series-B SaaS"
 python3 scripts/score_evp.py --evp "We help companies improve their growth and optimize outcomes." --tier 3
+python3 scripts/score_evp.py --file examples/t3.good.txt --tier 3 --icp "Series-B SaaS"
+python3 scripts/score_evp.py --file examples/value-props.json
 ```
 
-Three tier lines from the sample Pain Signal Profile. Then yours.
+A passing run prints `# Proposition` and the line. `examples/value-props.json` exits 1. The line is `Refusal: a list of value props is not one proposition`.
+
+Three tier lines from the sample Pain Signal Profile. Then yours. The shipped artifact is one of those lines.
 
 ## What this pack will not do
 

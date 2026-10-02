@@ -41,6 +41,30 @@ class ScoreEvpBadInput(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn("--evp required", result.stderr)
 
+    def test_value_prop_list_is_refused(self):
+        result = run(["--file", str(ROOT / "examples" / "value-props.json")])
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        blob = result.stdout + result.stderr
+        self.assertIn("a list of value props is not one proposition", blob)
+        self.assertNotIn("# Proposition", result.stdout)
+        self.assertNotIn("Traceback", result.stderr)
+
+    def test_headline_options_are_refused(self):
+        draft = '{"headlines":["Option A: Ship faster","Option B: Spend less"]}'
+        result = run(["--stdin"], stdin=draft)
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("a list of value props is not one proposition", result.stdout + result.stderr)
+
+    def test_good_file_prints_one_proposition(self):
+        result = run([
+            "--file", str(ROOT / "examples" / "t3.good.txt"),
+            "--tier", "3",
+            "--icp", "Series-B SaaS",
+        ])
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("# Proposition", result.stdout)
+        self.assertIn("pipeline gap", result.stdout.lower())
+
 
 if __name__ == "__main__":
     unittest.main()
