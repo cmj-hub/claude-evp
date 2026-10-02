@@ -79,6 +79,12 @@ Tiers 2–4. That is where B2B buyers live. Tier 5 is a direct ask — your inte
 
 No, and there is no key to enter. The pack, the scorer, and the sample are MIT. If you would rather not install anything, the [EVP Generator](https://jaymountconsulting.com/tools/evp-generator) writes the same line in your browser.
 
+## On the site
+
+- [Early Value Propositions pack](https://jaymountconsulting.com/skills/claude-evp) — this pack's page
+- [Skill packs catalog](https://jaymountconsulting.com/skills) — install paths + every pack
+- [Course twin](https://jaymountconsulting.com/learn/courses/early-value-propositions) — human build guide for this pack
+
 ## Free, no signup
 
 - **[EVP Generator](https://jaymountconsulting.com/tools/evp-generator)** — the same job as this pack, hosted. No account, no key.
