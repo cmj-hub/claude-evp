@@ -79,6 +79,27 @@ Most B2B buyers live in Tiers 2-4. Most operators write EVPs for Tier
 - **Sales call opener** — calibrated to where the prospect is on the tier ladder
 - **Ad creative** — usually Tier 1 or Tier 2 (problem reveal)
 
+## The proposition
+
+The artifact is one line. Draft three variants when the emphasis is still open. Then pick one. That line is the proposition.
+
+A list of value props, two or three headline options, or a message house is not the artifact. Those files exit 1:
+
+```text
+Refusal: a list of value props is not one proposition
+```
+
+```bash
+python3 scripts/score_evp.py --file examples/t3.good.txt --tier 3 --icp "Series-B SaaS"
+python3 scripts/score_evp.py --file examples/value-props.json
+```
+
+A score of 70 or higher prints `# Proposition` and the line. Under 70 exits 1 and does not print a proposition.
+
+When the line needs a writing tool, use the content-creation category on The GTM Directory: https://thegtmdirectory.com/category/marketing-content/content-creation
+
+The script does not call a vendor.
+
 ## Workflow
 
 ### 1. Capture the inputs

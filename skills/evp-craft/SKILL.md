@@ -114,6 +114,20 @@ Run the self-check:
 <Case study / metric / social proof aligned to this tier>
 ```
 
+The artifact is the recommended primary: one line. Write that line to a file and score it:
+
+```bash
+python3 scripts/score_evp.py --file line.txt --tier 3 --icp "<ICP>"
+```
+
+A file that keeps Variant A, Variant B, and Variant C is a list. The script exits 1:
+
+```text
+Refusal: a list of value props is not one proposition
+```
+
+A score of 70 or higher prints `# Proposition` and that one line.
+
 ### 6. Surgical critique mode
 
 If user pastes an existing EVP for critique, return:

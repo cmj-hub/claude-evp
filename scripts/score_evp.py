@@ -45,6 +45,26 @@ def parse_json(text: str) -> dict:
     return data
 
 
+def read_text(path: str) -> str:
+    try:
+        with open(path, "rb") as handle:
+            raw = handle.read(MAX_INPUT_BYTES + 1)
+    except IsADirectoryError:
+        fail_input(f"not a file: {path}")
+    except FileNotFoundError:
+        fail_input(f"file not found: {path}")
+    except OSError:
+        fail_input(f"cannot read file: {path}")
+    if len(raw) > MAX_INPUT_BYTES:
+        fail_input(f"file is too large: {path}")
+    if raw.startswith(b"\xef\xbb\xbf"):
+        raw = raw[3:]
+    try:
+        return raw.decode("utf-8")
+    except UnicodeDecodeError:
+        fail_input(f"file is not UTF-8 text: {path}")
+
+
 def read_stdin_text() -> str:
     raw = sys.stdin.buffer.read(MAX_INPUT_BYTES + 1)
     if len(raw) > MAX_INPUT_BYTES:
@@ -67,6 +87,43 @@ VAGUE_TRADEOFFS = {
     "and more", "etc", "etc.", "without compromise", "without compromising",
     "without sacrificing quality",
 }
+
+LIST_KEYS = ("value_props", "headlines", "options", "pillars", "benefits", "messages")
+
+REFUSAL = "a list of value props is not one proposition"
+
+
+def string_items(value: object) -> List[str]:
+    if not isinstance(value, list):
+        return []
+    return [item.strip() for item in value if isinstance(item, str) and item.strip()]
+
+
+def prop_list(data: dict) -> List[str]:
+    """Two or more lines is the list a copy skill ships, not one proposition."""
+    found: List[str] = []
+    for key in LIST_KEYS:
+        found.extend(string_items(data.get(key)))
+    house = data.get("message_house")
+    if isinstance(house, dict):
+        for key in LIST_KEYS:
+            found.extend(string_items(house.get(key)))
+    seen = []
+    for item in found:
+        if item not in seen:
+            seen.append(item)
+    return seen if len(seen) >= 2 else []
+
+
+def bullet_props(text: str) -> List[str]:
+    lines = []
+    for line in text.splitlines():
+        stripped = line.strip()
+        match = re.match(r"^(?:[-*•]|\d+[.)])\s+(.+)$", stripped)
+        if match and match.group(1).strip():
+            lines.append(match.group(1).strip())
+    return lines if len(lines) >= 2 else []
+
 
 TIER_HALLMARKS = {
     1: ["if your", "you're losing", "you don't know", "most teams aren't"],
@@ -258,35 +315,66 @@ def format_text(s: EVPScore) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--evp", default="")
+    parser.add_argument("--file", default=None)
     parser.add_argument("--tier", type=int, default=None, choices=[1, 2, 3, 4, 5])
     parser.add_argument("--icp", default=None)
     parser.add_argument("--stdin", action="store_true")
     parser.add_argument("--format", default="text", choices=["text", "json"])
     args = parser.parse_args()
 
+    evp = ""
+    tier = args.tier
+    icp = args.icp
     if args.stdin:
         data = parse_json(read_stdin_text())
-        evp = data.get("evp", "")
-        if not isinstance(evp, str):
-            evp = ""
-        tier = data.get("tier")
-        icp = data.get("icp")
-        if icp is not None and not isinstance(icp, str):
-            icp = None
+        props = prop_list(data)
+        if props:
+            print(f"Refusal: {REFUSAL}")
+            return 1
+        raw_evp = data.get("evp", "")
+        evp = raw_evp if isinstance(raw_evp, str) else ""
+        if tier is None and isinstance(data.get("tier"), int):
+            tier = data.get("tier")
+        if icp is None and isinstance(data.get("icp"), str):
+            icp = data.get("icp")
+    elif args.file:
+        text = read_text(args.file)
+        if args.file.endswith(".json"):
+            data = parse_json(text)
+            props = prop_list(data)
+            if props:
+                print(f"Refusal: {REFUSAL}")
+                return 1
+            raw_evp = data.get("evp", "")
+            evp = raw_evp if isinstance(raw_evp, str) else ""
+            if tier is None and isinstance(data.get("tier"), int):
+                tier = data.get("tier")
+            if icp is None and isinstance(data.get("icp"), str):
+                icp = data.get("icp")
+        else:
+            props = bullet_props(text)
+            if props:
+                print(f"Refusal: {REFUSAL}")
+                return 1
+            evp = text.strip()
     else:
         evp = args.evp
-        tier = args.tier
-        icp = args.icp
 
-    if not evp:
+    if not evp or not evp.strip():
         print("--evp required.", file=sys.stderr)
         return 2
 
-    result = score_evp(evp, tier, icp)
+    result = score_evp(evp.strip(), tier, icp)
     if args.format == "json":
-        print(json.dumps(asdict(result), indent=2))
+        payload = asdict(result)
+        payload["proposition"] = result.evp if result.total >= 70 else ""
+        print(json.dumps(payload, indent=2))
     else:
         print(format_text(result))
+        if result.total >= 70:
+            print()
+            print("# Proposition")
+            print(result.evp)
     return 0 if result.total >= 70 else 1
 
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0] — 2026-10-01
+
+### Added
+- The artifact is one proposition. A score of 70 or higher prints `# Proposition` and the line.
+- `examples/value-props.json`, a headline-option list, and a message house exit 1: `Refusal: a list of value props is not one proposition`.
+- `scripts/score_evp.py` accepts `--file`. A text file with two or more bullets is the same refusal.
+
 ## [0.3.0] — 2026-09-08
 
 Public magnet pass. Instrument stays public. First loop is 15 minutes.
