@@ -1,27 +1,26 @@
 {
   "renderer_version": 3,
-  "title": "EVP Generator",
-  "subtitle": "One line, 22 words, matched to what the buyer already knows",
+  "title": "Value proposition",
+  "subtitle": "One line for why this buyer should care.",
   "accent_color": "#CC4714",
   "tagline_top": "JMC Skill Pack",
-  "proof": "score_evp.py · tier-matched · 22-word cap · no LLM",
+  "proof": "score_evp.py \u00b7 tier-3 100 \u00b7 vague 59 \u00b7 no LLM",
   "cta": "jaymountconsulting.com/tools/evp-generator",
   "command": "/evp",
-  "user_prompt": "craft a tier-3 EVP for fintech CFOs",
+  "user_prompt": "score the tier-3 line",
   "response_lines": [
-    "Loading PSP + brand voice...",
-    "Schwartz tier 3: solution-aware, not product-aware",
-    "Composing <ICP> · <pain> · <outcome> · <tradeoff>",
-    "Scoring against abstract-verb + metric rubric...",
-    "EVP ready · score 84 / 100"
+    "Scoring examples/t3.good.txt",
+    "18 words \u00b7 tier 3 \u00b7 ICP named",
+    "Tier-3 line scored 100",
+    "Vague line scored 59",
+    "No LLM \u00b7 no paid API"
   ],
   "artifact": {
-    "label": "evp/tier-3.md",
+    "label": "examples/t3.good.txt",
     "lines": [
-      "For fintech CFOs whose close cycle stalls",
-      "at audit-trail gaps, we ship a 5-day",
-      "close in 30 days without ripping out",
-      "your GL or retraining your team."
+      "For Series-B SaaS in a pipeline gap,",
+      "we ship 14+ SQLs per month without",
+      "hiring 2 more SDRs."
     ]
   }
 }

@@ -26,7 +26,7 @@ The build guide teaches the framework to a human. This pack teaches the same fra
 ![Install](https://img.shields.io/badge/install-npx%20skills-blue)
 
 <p align="center">
-  <img src="./assets/demo.gif" alt="claude-evp — scoring a 22-word Tier-3 Early Value Proposition 100 vs 59" width="100%">
+  <img src="./assets/demo.gif" alt="Value proposition skill — Tier-3 line 100, vague line 59" width="100%">
 </p>
 
 ## What this replaces
