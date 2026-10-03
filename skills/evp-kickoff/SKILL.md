@@ -2,8 +2,7 @@
 name: evp-kickoff
 description: Adaptive router for the EVP skill pack. Detects state (brand-config? SOUL? primary EVP locked per tier? competitors named? proofs reservoir?) and picks the next-best step. Loaded by the main evp skill on bare invocation.
 user-invocable: false
-allowed-tools: Read
-  - Grep
+allowed-tools: Read Grep
 license: MIT
 
 ---

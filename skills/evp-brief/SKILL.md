@@ -2,8 +2,7 @@
 name: evp-brief
 description: Build a structured 3-tier EVP brief — Tier 2 (problem-aware), Tier 3 (solution-aware), Tier 4 (product-aware) — side-by-side with audience, pain, EVP variants, and proof per tier. Becomes the single source of truth your hero, ads, cold email, and pricing-page pull from. Loaded by the main evp skill when the user wants a full brief.
 user-invocable: false
-allowed-tools: Read Write
-  - Grep
+allowed-tools: Read Write Grep
 license: MIT
 
 ---
