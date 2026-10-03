@@ -2,8 +2,7 @@
 name: evp-onboarding
 description: First-run interactive setup for the EVP skill pack. Walks the operator through brand-config.json (awareness tier, outcomes-I-will-claim, proofs reservoir, competitors) and SOUL.md (tier-by-tier voice, won't-claim list, boundaries) in ~10 minutes. Refuses to let the operator skip — generic EVP is worse than no EVP. Loaded automatically when brand-config.json or SOUL.md is missing.
 user-invocable: false
-allowed-tools: Read Write
-  - Grep
+allowed-tools: Read Write Grep
 license: MIT
 
 ---
