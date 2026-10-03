@@ -29,13 +29,13 @@ A $10K–15K positioning sprint's first output: one hero line, written from insi
 ## Install
 
 ```bash
-npx skills add cmj-hub/claude-evp --all -g --full-depth
+skills add cmj-hub/claude-evp --all -g --full-depth
 ```
 
 `--all` writes this pack for every host the installer knows. One host:
 
 ```bash
-npx skills add cmj-hub/claude-evp --skill '*' -g --full-depth -y -a claude-code
+skills add cmj-hub/claude-evp --skill '*' -g --full-depth -y -a claude-code
 ```
 
 Swap `claude-code` for `cursor`, `codex`, `grok`, `github-copilot`, `windsurf`, `cline`, or `opencode`.
