@@ -1,5 +1,6 @@
 {
   "name": "evp",
+  "icon": "icon.png",
   "version": "0.3.0",
   "description": "An Early Value Proposition is a \u226422-word line matched to a Schwartz awareness tier. Same product, five lines, because the unaware buyer and the vendor-comparing buyer are not the same reader.",
   "author": {
