@@ -98,8 +98,16 @@ python3 ${CLAUDE_PLUGIN_ROOT}/scripts/score_evp.py \
 ```
 
 (Plain-skills install: `scripts/score_evp.py` from the pack root.)
-Exit 1 means under 70 — rewrite before showing it. Then run the
-self-check, which covers what the scorer cannot see:
+Exit 1 means under 70 — rewrite before showing it.
+
+**One proposition.** Score each line on its own. A draft that holds a
+list (two or more `value_props`, `headlines`, `options`, `pillars`,
+`benefits` or `messages`, or two or more bullet lines in a text file)
+exits 1 with `Refusal: a list of value props is not one proposition`.
+A line that scores 70+ prints under `# Proposition` (`proposition` in
+`--format json`); that one line is what ships.
+
+Then run the self-check, which covers what the scorer cannot see:
 
 | Check | Pass criterion |
 |---|---|

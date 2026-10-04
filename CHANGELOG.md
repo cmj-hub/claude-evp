@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.6.0] — 2026-10-04
+
+Ports the one-proposition rule from `feat/one-proposition` onto current main.
+
+### Added
+- A line that scores 70+ prints under `# Proposition`; `--format json` gains `proposition`.
+- A list is refused, exit 1: `Refusal: a list of value props is not one proposition`. Two or more items under `value_props`, `headlines`, `options`, `pillars`, `benefits` or `messages` (also inside `message_house`), or two or more bullet lines in a text file. `examples/value-props.json` shows it.
+- `--file` reads a `.json` draft (`evp`, `tier`, `icp`) with the same tier check as `--stdin`.
+- `SECURITY.md`, and a Privacy and security section in the README.
+
 ## [0.5.0] — 2026-10-04
 
 Suite pass. EVP is step 2 of the GTM operator suite, after psp.

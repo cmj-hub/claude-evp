@@ -69,11 +69,14 @@ Artifact: `examples/t3.good.txt`.
 python3 scripts/score_evp.py --file examples/t3.good.txt --tier 3 --icp "Series-B SaaS"   # 100, exit 0
 python3 scripts/score_evp.py --file examples/t3.bad.txt --tier 3                          # 59, exit 1
 python3 scripts/score_evp.py --evp "<your line>" --tier 3 --format json
+python3 scripts/score_evp.py --file examples/value-props.json                             # refused, exit 1
 ```
+
+A passing line prints under `# Proposition`. A list of value props is refused: `a list of value props is not one proposition`.
 
 Three tier lines from the sample Pain Signal Profile. Then yours.
 
-Exit codes: `0` = 70 or above, `1` = rewrite, `2` = bad input. Run `bash scripts/smoke-test.sh` to check the pack itself.
+Exit codes: `0` = 70 or above, `1` = rewrite (or a list instead of one line), `2` = bad input. Run `bash scripts/smoke-test.sh` to check the pack itself.
 
 ## What this pack will not do
 
@@ -117,6 +120,10 @@ That one does ask for an email, and it enrols you in a short follow-up on the sa
 Previous: [Ideal customer profile](https://github.com/cmj-hub/claude-psp)
 
 Next: [Pricing strategy](https://github.com/cmj-hub/claude-pricing)
+
+## Privacy and security
+
+The scorer is stdlib Python and runs locally. No script opens a network connection, and no skill fetches pages. The pack writes `brand-config.json`, `SOUL.md` and `evp-brief-<icp>.md` in your project root, and nothing else. No telemetry, no credentials, nothing sent or posted. See [SECURITY.md](SECURITY.md).
 
 ## License
 
