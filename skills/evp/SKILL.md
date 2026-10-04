@@ -22,6 +22,8 @@ problem.
 
 ## Before you write anything (non-negotiable)
 
+> **Scoring something pasted needs no setup.** If the operator handed you a line, post, draft, or file to score, run the scorer on it first and report the result; missing config only means some checks are skipped, so say which. Offer setup afterwards as the next step. Check whether files exist with Read or Glob, not a shell command.
+
 These are the rules in `AGENTS.md`, restated here because a plugin does
 not load that file on its own.
 
@@ -50,7 +52,7 @@ not load that file on its own.
 Route by `$ARGUMENTS`. If it names a mode, go straight to it. If it is
 empty, run `status`. Otherwise match the request to a row. Read the
 mode file with the Read tool and follow it. Config or SOUL missing →
-`setup` first, whatever was asked.
+`setup` first, except when scoring a pasted line (see above).
 
 | You say / argument | Mode file |
 |---|---|
