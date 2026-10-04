@@ -1,9 +1,10 @@
 ---
 name: evp-kickoff
-description: Adaptive router for the EVP skill pack. Detects state (brand-config? SOUL? primary EVP locked per tier? competitors named? proofs reservoir?) and picks the next-best step. Loaded by the main evp skill on bare invocation.
+description: "Adaptive router for the EVP pack. Detects state (brand-config, SOUL, PSP present, primary tier locked and published, competitors, proofs reservoir, brief age) and names the next step. Use when the operator runs a bare /evp, asks where to start, or asks what is next for positioning."
 user-invocable: false
 allowed-tools: Read Grep
 license: MIT
+models: ""
 
 ---
 
@@ -26,9 +27,11 @@ state = {
     "has_brand_config":   file_exists("brand-config.json"),
     # The pack ships SOUL.md as a template. Unfilled placeholders = not set up.
     "has_soul":           file_exists("SOUL.md") and "<e.g." not in soul_text,
-    "has_psp":            brand_config.psp.primary_pain != "",
+    # psp is what the psp pack publishes; psp_drafts.primary is the fallback.
+    "has_psp":            brand_config.psp.primary_pain != "" or brand_config.psp_drafts.primary.pain != "",
     "primary_tier_set":   primary in [1, 2, 3, 4, 5],
     "locked":             {t: brand_config.evp_drafts[k].primary != "" for t, k in TIER_KEYS.items()},
+    "evp_published":      brand_config.evp.primary != "",  # the block cold-email, landing-page, sales-offer read
     "has_proofs":         len(soul.proofs_reservoir) >= 3,
     "has_competitors":    len(brand_config.competitors) > 0,
     "brief_built":        glob("evp-brief-*.md") != [],
@@ -41,9 +44,10 @@ Evaluate top to bottom; the first matching row wins.
 | State | Route to |
 |---|---|
 | `!has_brand_config OR !has_soul` | `evp-onboarding` |
-| `!has_psp` | "Install cmj-hub/claude-psp first — EVPs without a PSP are guesses" |
+| `!has_psp` | "No PSP in brand-config.json. Install `/plugin install psp@gtm-operator-skills`, run `/psp:psp`. EVPs without a PSP are guesses." |
 | `!primary_tier_set` | "Pick your primary outreach tier (most common is Tier 3)" |
 | primary tier not locked | `evp-craft` for the primary tier |
+| `!evp_published` | `evp-craft` Step 7 — publish the primary-tier line as the `evp` block |
 | `!has_proofs` | "Mine 3 proofs into SOUL.md before publishing the EVP" |
 | `!locked[2]` | `evp-craft` for Tier 2 (reframe) |
 | `!has_competitors` | "Name 2-3 competitors + the axis you beat each on" (Step 6 of `evp-onboarding`) |
@@ -51,7 +55,7 @@ Evaluate top to bottom; the first matching row wins.
 | `!locked[3]` | `evp-craft` for Tier 3 (category split) |
 | `!brief_built` | `evp-brief` (build the 3-tier brief) |
 | `brief_stale` | `evp-brief` — "Your brief is past its refresh date. Re-score and rebuild." |
-| otherwise | "EVPs operational. Re-run every 90 days. Plug into claude-cold-email next." |
+| otherwise | "EVPs operational. Re-run every 90 days. Plug into `/cold-email:cold-email` next." |
 
 Before routing, report what you detected in one line per item (✓ / ⬜),
 so the operator sees why they landed where they did.

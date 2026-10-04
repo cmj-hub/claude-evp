@@ -29,13 +29,13 @@ A $10K–15K positioning sprint's first output: one hero line, written from insi
 ## Install
 
 ```bash
-skills add cmj-hub/claude-evp --all -g --full-depth
+npx skills add cmj-hub/claude-evp --all -g --full-depth
 ```
 
 `--all` writes this pack for every host the installer knows. One host:
 
 ```bash
-skills add cmj-hub/claude-evp --skill '*' -g --full-depth -y -a claude-code
+npx skills add cmj-hub/claude-evp --skill '*' -g --full-depth -y -a claude-code
 ```
 
 Swap `claude-code` for `cursor`, `codex`, `grok`, `github-copilot`, `windsurf`, `cline`, or `opencode`.
@@ -44,7 +44,7 @@ Swap `claude-code` for `cursor`, `codex`, `grok`, `github-copilot`, `windsurf`, 
 
 ```text
 /plugin marketplace add cmj-hub/gtm-operator-skills
-/plugin install evp
+/plugin install evp@gtm-operator-skills
 ```
 
 Plugin commands are namespaced: `/evp:evp`, `/evp:evp craft 3`, `/evp:evp brief`, `/evp:evp-onboarding`.

@@ -1,19 +1,22 @@
 ---
 name: evp
 description: >
-  Early Value Proposition (EVP) generator for B2B operators. Uses the
-  Eugene Schwartz awareness model (unaware, problem-aware, solution-aware,
-  product-aware, most-aware) to produce a sharp, 22-word EVP for each
-  awareness tier — plus a structured 3-tier EVP brief documenting the
-  audience, pain, EVP, and proof per tier. EVPs follow the JMC shape:
-  "For <ICP> in <pain> we're the <one team> that does <specific outcome>
-  without <obvious tradeoff>." Loaded for cold email openers, hero copy,
-  pricing pages, and sales-call openings. Triggers on: "write an EVP",
-  "value proposition", "elevator pitch", "positioning statement", "hero
-  copy", "EVP brief", "what's our angle", "messaging by awareness level".
+  Writes an Early Value Proposition (EVP): a line of 22 words or fewer,
+  matched to one Schwartz awareness tier (unaware, problem-aware,
+  solution-aware, product-aware, most-aware), in the shape "For {ICP} in
+  {pain}, we're the {one team} that does {specific outcome} without
+  {obvious tradeoff}." Also builds a 3-tier brief (tiers 2-4) and scores
+  any line 0-100 with a bundled script. Reads the PSP from brand-config.json
+  and publishes the chosen outreach line as the `evp` block. Use when the
+  operator asks for an EVP, value proposition, positioning line, elevator
+  pitch, hero line, or messaging by awareness level, or wants a line
+  scored. Not for building the pain profile underneath it (use psp), not
+  for the full cold email or sequence (use cold-email), not for the
+  landing page (use landing-page).
 argument-hint: "[craft <tier> | brief | score <line>]"
-allowed-tools: Read Write Grep
+allowed-tools: Read Write Grep Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/score_evp.py:*)
 license: MIT
+models: ""
 
 ---
 
@@ -34,7 +37,8 @@ problem.
 These are the rules in `AGENTS.md`, restated here because a plugin does
 not load that file on its own.
 
-1. **Load `brand-config.json` and `SOUL.md` from the project root.** If
+1. **Load `brand-config.json` and [SOUL.md](../../SOUL.md) from the
+   project root.** Both are shared by every pack in the suite. If
    either is missing, or `SOUL.md` still holds template placeholders
    (`<e.g. ...>`, `<...>`), stop and route to `evp-onboarding`. Do not
    draft a "generic" EVP in the meantime.
@@ -125,14 +129,16 @@ Most B2B buyers live in Tiers 2-4. Most operators write EVPs for Tier
 | Input | Source |
 |---|---|
 | `icp` | ICP segment (specific, not "B2B SaaS") |
-| `psp` | PSP pain (load from `claude-psp` if available) |
+| `psp` | `brand-config.psp` (`primary_pain`, `vocabulary`); fallback `brand-config.psp_drafts.primary` |
 | `outcome` | The specific result you deliver |
 | `tradeoff` | The obvious tradeoff you spare them |
 | `awareness_tier` | Which Schwartz tier (1-5) we're writing for |
 | `proof` | (Optional) Case study / metric / social proof for the tier |
 
-If `psp` is missing, push the user to build one first via
-`claude-psp` — EVPs without a PSP are guesses.
+If neither `psp` nor `psp_drafts.primary` is in `brand-config.json`,
+stop: the psp pack produces it. Point the user to `/psp:psp` (install
+with `/plugin install psp@gtm-operator-skills`). Do not invent the
+pain or the vocabulary. EVPs without a PSP are guesses.
 
 ### 2. Generate 3 EVP variants for the tier
 
@@ -149,7 +155,7 @@ Validate each against the 22-word constraint.
 Score every variant with the deterministic scorer before showing it:
 
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/score_evp.py" \
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/score_evp.py \
   --evp "<variant>" --tier <N> --icp "<icp segment>"
 ```
 
@@ -185,11 +191,18 @@ After delivering single-tier EVPs, offer:
 - [`evp-craft`](../evp-craft/SKILL.md) — single-tier EVP generation and critique
 - [`evp-brief`](../evp-brief/SKILL.md) — structured 3-tier brief
 
-## Plugs into
+## Works with the suite
 
-- **[claude-cold-email](https://github.com/cmj-hub/claude-cold-email)** — EVP is line 3 of every cold email
-- **[claude-psp](https://github.com/cmj-hub/claude-psp)** — PSP is the pain layer underneath every EVP
-- **[Early Value Propositions course](https://jaymountconsulting.com/learn/courses/early-value-propositions)** — the human build guide
+This is step 2 of the GTM operator suite (`/plugin marketplace add cmj-hub/gtm-operator-skills`).
+
+- **Reads:** `psp` (fallback `psp_drafts.primary`), `icp`, `competitors`, `primary_outreach_tier` from `brand-config.json` if present.
+- **Writes:** `evp_drafts`, `competitors`, `primary_outreach_tier`, and the chosen outreach line as the `evp` block (`tier`, `primary`, `outcome`, `tradeoff`, `proof`). Merge at the field level; never overwrite another pack's keys.
+- **Before this:** psp (`/psp:psp`), when `brand-config.json` has no `psp` block.
+- **After this:** cold-email (`/cold-email:cold-email`) for the first touch, landing-page (`/landing-page:page`) for the hero, sales-offer (`/sales-offer:cold-offer`) for a give-first offer.
+
+If a companion pack is not installed, name it and its install line (`/plugin install <name>@gtm-operator-skills`); do not do its job inline.
+
+Human build guide: [Early Value Propositions course](https://jaymountconsulting.com/learn/courses/early-value-propositions).
 
 ## Free hosted version
 

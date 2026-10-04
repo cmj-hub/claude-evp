@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.5.0] — 2026-10-04
+
+Suite pass. EVP is step 2 of the GTM operator suite, after psp.
+
+### Added
+- Picking the line for `primary_outreach_tier` publishes an `evp` block to `brand-config.json` (`tier`, `primary`, `outcome`, `tradeoff`, `proof`) for cold-email, landing-page, sales-offer and email-sequence. `evp-craft` Step 7 writes it; `evp-kickoff` routes there until it exists.
+- `brand-config.example.json` carries a full `psp` block (the shape the psp pack publishes) and an `evp` block matching the Tier 3 draft; `tests/test_example_config.py` pins both.
+- "Works with the suite" section in `evp`: what it reads, writes, and hands off to.
+
+### Changed
+- PSP input reads `psp`, then falls back to `psp_drafts.primary`. Neither → name the psp pack (`/plugin install psp@gtm-operator-skills`, `/psp:psp`) and stop. Onboarding no longer asks whether claude-psp is installed, and never writes `psp` itself.
+- `brand-config.json` and `SOUL.md` merge at the field level. The pack writes only its own keys, fills `operator` and `icp` gaps only, and asks before changing a filled field. AGENTS.md rules 7-9.
+- Skill descriptions say when to use each skill and what each is not for. The main description drops the `<ICP>`-style placeholders. Every SKILL.md carries `models: ""`.
+- Scorer calls use `${CLAUDE_PLUGIN_ROOT}/scripts/score_evp.py` unquoted, pre-approved in `allowed-tools`.
+- README install lines use `npx skills add` and `/plugin install evp@gtm-operator-skills`.
+- `plugin.json`: author URL.
+
 ## [0.4.0] — 2026-10-04
 
 ### Fixed

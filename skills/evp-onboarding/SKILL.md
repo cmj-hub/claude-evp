@@ -1,8 +1,9 @@
 ---
 name: evp-onboarding
-description: First-run interactive setup for the EVP skill pack. Walks the operator through brand-config.json (awareness tier, outcomes-I-will-claim, proofs reservoir, competitors) and SOUL.md (tier-by-tier voice, won't-claim list, boundaries) in ~10 minutes. Refuses to let the operator skip — generic EVP is worse than no EVP. Loaded automatically when brand-config.json or SOUL.md is missing.
+description: "First-run setup for the EVP pack: pulls ICP and pain from the PSP, then captures primary awareness tier, outcomes-I-will-claim, tradeoffs, proofs reservoir and competitors in brand-config.json, and tier voice and won't-claim list in SOUL.md, in about 10 minutes. Merges into existing shared files at the field level. Refuses to let the operator skip; a generic EVP is worse than none. Use when brand-config.json or SOUL.md is missing, or the operator asks to set up EVP config."
 allowed-tools: Read Write Grep
 license: MIT
+models: ""
 
 ---
 
@@ -21,9 +22,10 @@ Also user-invocable: `/evp-onboarding` (plugin: `/evp:evp-onboarding`),
 
 Templates: `brand-config.example.json` and `SOUL.md` ship at the pack
 root (`${CLAUDE_PLUGIN_ROOT}` in a plugin install). Use them as the
-shape for what you write. If the project already has either file, read
-it, show what is filled, and only ask for the gaps — never overwrite
-without a yes.
+shape for what you write, not as files to copy. Both files are shared
+by every pack in the suite (psp, cold-email and the rest write to them
+too). If the project already has either file, read it, show what is
+filled, and only ask for the gaps. Step 8 has the merge rules.
 
 Every answer is the operator's own. Do not suggest outcomes, metrics,
 or proofs for them to accept; the examples below show the shape only.
@@ -32,15 +34,27 @@ or proofs for them to accept; the examples below show the shape only.
 
 ### Step 1 — ICP + PSP carry-forward
 
-```
-Quick check — do you already have a PSP?
+Read the PSP from `brand-config.json`, in this order:
 
-If yes (claude-psp is installed and PSP doc exists): I'll pull ICP + pain + vocabulary from there.
-If no: Install cmj-hub/claude-psp first. EVP without a PSP is a guess.
+1. `psp` — the block the psp pack publishes when a primary PSP is
+   locked. Use `psp.primary_pain` and `psp.vocabulary`.
+2. Fallback: `psp_drafts.primary` — an unlocked draft. Use
+   `psp_drafts.primary.pain` and `.vocabulary`, and tell the operator
+   it is a draft, not a locked PSP.
+3. Neither → stop and say:
+
+```
+No PSP in brand-config.json. The psp pack produces it.
+
+Install:  /plugin install psp@gtm-operator-skills
+Then run: /psp:psp
+
+EVP without a PSP is a guess.
 ```
 
-Save to `brand-config.icp.segment`, `brand-config.psp.primary_pain`,
-and `brand-config.psp.vocabulary` (the buyer's own phrases).
+Do not invent the pain or the vocabulary, and do not write a `psp`
+block yourself; that block belongs to the psp pack. Take `icp.segment`
+as it is; fill it only if it is empty.
 
 ### Step 2 — Primary outreach tier
 
@@ -151,10 +165,28 @@ Save to `SOUL.md`.
 
 ### Step 8 — Write the files + smoke test
 
-Write `brand-config.json` + `SOUL.md` at project root. Replace every
-`<...>` placeholder in the SOUL template — a placeholder left behind
-makes `evp-kickoff` route back here. Leave `evp_drafts.*.primary` empty
-unless the operator already has a line they want to keep. Show:
+Write `brand-config.json` + `SOUL.md` at project root. Both are shared
+by every pack in the suite, so merge at the field level:
+
+- Read the existing file first. Add or update only the fields this
+  pack owns (`evp_drafts`, `competitors`, `primary_outreach_tier`,
+  `refresh_cadence_days`, `evp`); leave every other key exactly as it
+  was. Never rewrite the file from `brand-config.example.json`, never
+  delete another pack's keys (`psp`, `psp_drafts`, `tone`, `pricing`
+  and the rest stay as they are).
+- Show the diff and ask before changing a field that already has a
+  value.
+- `operator` and `icp` are shared: fill gaps only.
+- `SOUL.md`: append or update only this pack's own `## ` sections (the
+  ones in the pack's [SOUL.md](../../SOUL.md) template); never rewrite
+  another pack's section.
+
+Replace every `<...>` placeholder in this pack's SOUL sections — a
+placeholder left behind makes `evp-kickoff` route back here. Leave `evp_drafts.*.primary` empty
+unless the operator already has a line they want to keep. If they
+keep one for the primary outreach tier, publish it as the `evp` block
+(shape in `evp-craft` Step 7); otherwise `evp` waits until they pick a
+line. Show:
 
 ```
 ✓ brand-config.json — Tier 3 primary + 3 outcomes + 3 competitors
@@ -172,6 +204,6 @@ The output will use:
 ## References
 
 - `../../brand-config.example.json`
-- `../../SOUL.md`
+- [SOUL.md](../../SOUL.md)
 - `../../AGENTS.md`
 - Sister skills: `evp-craft`, `evp-brief`

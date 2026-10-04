@@ -1,9 +1,10 @@
 ---
 name: evp-brief
-description: Build a structured 3-tier EVP brief — Tier 2 (problem-aware), Tier 3 (solution-aware), Tier 4 (product-aware) — side-by-side with audience, pain, EVP variants, and proof per tier. Becomes the single source of truth your hero, ads, cold email, and pricing-page pull from. Loaded by the main evp skill when the user wants a full brief.
+description: "Builds a structured 3-tier EVP brief: Tier 2 (problem-aware), Tier 3 (solution-aware), Tier 4 (product-aware), side by side with audience, pain, primary and alternate lines, and proof per tier. The single source your hero, ads, cold email and pricing page pull from. Use when the main evp skill routes a request for a full brief or messaging across awareness levels."
 user-invocable: false
-allowed-tools: Read Write Grep
+allowed-tools: Read Write Grep Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/score_evp.py:*)
 license: MIT
+models: ""
 
 ---
 
@@ -32,7 +33,7 @@ are we building this brief for? (Run again per segment.)"
 | Input | Source |
 |---|---|
 | `icp` | `brand-config.icp.segment` |
-| `psp` | `brand-config.psp` (or the claude-psp doc) |
+| `psp` | `brand-config.psp`; fallback `brand-config.psp_drafts.primary`. Neither → stop and point to `/psp:psp` (`/plugin install psp@gtm-operator-skills`) |
 | `outcome` | `SOUL.md` → Outcomes I will claim |
 | `tradeoff` | `SOUL.md` → Tradeoffs I name |
 | `competitors` | `brand-config.competitors` — required for Tier 4 |
@@ -55,7 +56,7 @@ For each of Tier 2, Tier 3, Tier 4:
 - Where to deploy this EVP (which surfaces)
 
 Score every primary and alternate with
-`python3 "${CLAUDE_PLUGIN_ROOT}/scripts/score_evp.py" --evp "<line>" --tier <N> --icp "<icp>"`
+`python3 ${CLAUDE_PLUGIN_ROOT}/scripts/score_evp.py --evp "<line>" --tier <N> --icp "<icp>"`
 (plain-skills install: `scripts/score_evp.py`). Nothing under 70 goes
 in the brief.
 
@@ -63,7 +64,10 @@ in the brief.
 
 Write the brief to `evp-brief-<icp-slug>.md` at the project root (ask
 before overwriting an existing one), then offer to copy each tier's
-primary line back into `brand-config.evp_drafts`.
+primary line back into `brand-config.evp_drafts`. Merge at the field
+level: write only `evp_drafts` (and `evp`, per `evp-craft` Step 7, if
+the operator picks the primary-tier line as the outreach line), leave
+every other key as it was, and ask before changing a filled field.
 
 ```markdown
 # EVP Brief — <ICP>

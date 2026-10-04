@@ -1,9 +1,10 @@
 ---
 name: evp-craft
-description: Generate 3 EVP variants for a single Schwartz awareness tier. Each variant follows the 22-word shape and explores a different emphasis (outcome / tradeoff / ICP). Loaded by the main evp skill when the user wants to craft EVPs for a specific tier.
+description: "Generates and scores 3 EVP variants for one Schwartz awareness tier (outcome-led, tradeoff-led, ICP-led), each in the 22-word shape, and critiques a pasted line. Publishes the chosen primary-tier line to brand-config.json as the evp block. Use when the main evp skill routes a request for a line at one tier or a critique of an existing line."
 user-invocable: false
-allowed-tools: Read Write Grep
+allowed-tools: Read Write Grep Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/score_evp.py:*)
 license: MIT
+models: ""
 
 ---
 
@@ -41,15 +42,17 @@ Read these from the project files before asking the user for anything:
 | Input | Where it lives |
 |---|---|
 | `icp` | `brand-config.icp.segment` |
-| `psp_pain` | `brand-config.psp.primary_pain` + `psp.vocabulary` |
+| `psp_pain` | `brand-config.psp.primary_pain` + `psp.vocabulary`; fallback `psp_drafts.primary.pain` + `.vocabulary` |
 | `outcome` | `SOUL.md` → Outcomes I will claim |
 | `tradeoff` | `SOUL.md` → Tradeoffs I name |
 | `proof` | `SOUL.md` → Proofs in my reservoir |
 | `competitors` (Tier 4) | `brand-config.competitors` |
 
 If `brand-config.json` or `SOUL.md` is missing, stop and load
-`evp-onboarding`. If PSP is missing, suggest the user run `claude-psp`
-first. EVPs without a PSP are guesses.
+`evp-onboarding`. If neither `psp` nor `psp_drafts.primary` exists,
+stop: the psp pack produces it (`/psp:psp`; install with
+`/plugin install psp@gtm-operator-skills`). Never invent the pain.
+EVPs without a PSP are guesses.
 
 If the user asks for an outcome that is not on the will-claim list,
 refuse it and show the list. If the outcome is vague ("more pipeline",
@@ -90,7 +93,7 @@ you want immediate exclusion-by-segment (signals fit fast).
 Score each variant with the deterministic scorer:
 
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/score_evp.py" \
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/score_evp.py \
   --evp "<variant>" --tier <N> --icp "<icp segment>"
 ```
 
@@ -157,6 +160,33 @@ Rewrite (same voice):
 "<rewritten>"
 Rationale: <one sentence>
 ```
+
+### 7. Lock the outreach line
+
+When the operator picks a line, offer to save it to
+`brand-config.evp_drafts.<tier key>.primary` (with its `outcome`,
+`tradeoff`, `proof`). If that tier is `primary_outreach_tier`, also
+publish the `evp` block that cold-email, landing-page, sales-offer and
+email-sequence read:
+
+```json
+"evp": {
+  "tier": 3,
+  "primary": "<the chosen line>",
+  "outcome": "<outcome from the will-claim list>",
+  "tradeoff": "<tradeoff>",
+  "proof": "<proof quoted from the reservoir, or empty>"
+}
+```
+
+`tier` is `primary_outreach_tier` (an integer 1-5). Copy the values
+from the draft; do not reword them. Leave `proof` as `""` when the
+reservoir has none — never fill it.
+
+`brand-config.json` is shared by every pack in the suite. Merge at the
+field level: read the existing file, write only `evp_drafts` and
+`evp`, leave every other key exactly as it was, and show the diff and
+ask before changing a field that already has a value.
 
 ## References
 

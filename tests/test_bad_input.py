@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SCORE = ROOT / "scripts" / "score_evp.py"
-TOKEN = "super-secret-token"
+PROBE = "super-secret-token"
 
 
 def run(args, stdin=None):
@@ -27,9 +27,9 @@ class ScoreEvpBadInput(unittest.TestCase):
         self.assertNotIn("Traceback", result.stderr)
 
     def test_bad_json_hides_bytes(self):
-        result = run(["--stdin"], stdin='{"evp": "' + TOKEN)
+        result = run(["--stdin"], stdin='{"evp": "' + PROBE)
         self.assertEqual(result.returncode, 2)
-        self.assertNotIn(TOKEN, result.stderr + result.stdout)
+        self.assertNotIn(PROBE, result.stderr + result.stdout)
 
     def test_array_rejected(self):
         result = run(["--stdin"], stdin="[]")
