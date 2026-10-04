@@ -6,6 +6,23 @@
 
 A value proposition is one line that says why this buyer should care. The same product needs a different line for each buyer.
 
+## In 60 seconds
+
+```text
+/plugin marketplace add cmj-hub/gtm-operator-skills
+/plugin install evp@gtm-operator-skills
+/evp:evp
+```
+
+Or score the sample without an agent:
+
+```bash
+python3 scripts/score_evp.py --file examples/t3.good.txt --tier 3 --icp "Series-B SaaS"   # exit 0, prints 100/100, the proposition and "Next: /cold-email:cold-email"
+python3 scripts/score_evp.py --file examples/t3.bad.txt --tier 3                          # exit 1: - score 59/100 is under 70 → work through the axis lines below, lowest axis first
+```
+
+Part of the GTM operator suite — `/plugin install gtm@gtm-operator-skills` installs all ten.
+
 > Same product. Five readers. Twenty-two words each. Because they are not standing in the same place.
 
 An early value proposition is a line of 22 words or fewer, matched to an awareness tier. Same product, five lines, because the unaware buyer and the vendor-comparing buyer are not the same reader.
@@ -40,24 +57,21 @@ npx skills add cmj-hub/claude-evp --skill '*' -g --full-depth -y -a claude-code
 
 Swap `claude-code` for `cursor`, `codex`, `grok`, `github-copilot`, `windsurf`, `cline`, or `opencode`.
 
-### Claude Code only
-
-```text
-/plugin marketplace add cmj-hub/gtm-operator-skills
-/plugin install evp@gtm-operator-skills
-```
-
-Plugin commands are namespaced: `/evp:evp`, `/evp:evp craft 3`, `/evp:evp brief`, `/evp:evp-onboarding`.
+Claude Code: see [In 60 seconds](#in-60-seconds).
 
 ## What is in the pack
 
-| Skill | You type | What it does |
+One skill, `evp`, with modes. It enforces the rules, routes to the mode, and scores every line.
+
+| Mode | You type | What it does |
 |---|---|---|
-| `evp` | `/evp` | Entry point. Enforces the rules, routes to the right sub-skill, scores every line. |
-| `evp-onboarding` | `/evp-onboarding` | 10-minute setup: writes `brand-config.json` + `SOUL.md` (outcomes you will claim, proofs, competitors, voice). |
-| `evp-kickoff` | `/evp` (no args) | Reads your files, shows what is done, and picks the next step. |
-| `evp-craft` | `/evp craft <tier>` | Three variants for one tier (outcome-, tradeoff-, ICP-led), each scored. Also critiques a pasted line. |
-| `evp-brief` | `/evp brief` | Tier 2 / 3 / 4 side by side with proof and where to deploy each. Writes `evp-brief-<icp>.md`. |
+| `status` | `/evp:evp` (no args) | Reads your files, shows what is done, and picks the next step. |
+| `setup` | `/evp:evp setup` | 10-minute setup: writes `brand-config.json` + `SOUL.md` (outcomes you will claim, proofs, competitors, voice). Shared operator/ICP questions come from `/gtm:setup` once for the suite. |
+| `craft` | `/evp:evp craft <tier>` | Three variants for one tier (outcome-, tradeoff-, ICP-led), each scored. Also critiques a pasted line. |
+| `brief` | `/evp:evp brief` | Tier 2 / 3 / 4 side by side with proof and where to deploy each. Writes `gtm/evp-brief.md`. |
+| `score` | `/evp:evp score "<line>" 3` | Runs `scripts/score_evp.py` on one line. |
+
+Moved in 0.7: `/evp:evp-onboarding` is now `/evp:evp setup`. The sub-skills `evp-kickoff`, `evp-craft` and `evp-brief` are the `status`, `craft` and `brief` modes.
 
 The skill will not write a line until `brand-config.json` and `SOUL.md` exist in your project. It claims only outcomes on your will-claim list and cites only proofs from your reservoir. The rules are in [`AGENTS.md`](./AGENTS.md).
 
@@ -68,11 +82,11 @@ Artifact: `examples/t3.good.txt`.
 ```bash
 python3 scripts/score_evp.py --file examples/t3.good.txt --tier 3 --icp "Series-B SaaS"   # 100, exit 0
 python3 scripts/score_evp.py --file examples/t3.bad.txt --tier 3                          # 59, exit 1
-python3 scripts/score_evp.py --evp "<your line>" --tier 3 --format json
+python3 scripts/score_evp.py --evp "<your line>" --tier 3 --json
 python3 scripts/score_evp.py --file examples/value-props.json                             # refused, exit 1
 ```
 
-A passing line prints under `# Proposition`. A list of value props is refused: `a list of value props is not one proposition`.
+A passing line prints under `# Proposition`. A list of value props is refused: `a list of value props is not one proposition`. Every exit-1 reason prints as `- what is wrong → what to change`; `--json` adds `reasons`, `fixes` and `next`.
 
 Three tier lines from the sample Pain Signal Profile. Then yours.
 
@@ -123,7 +137,7 @@ Next: [Pricing strategy](https://github.com/cmj-hub/claude-pricing)
 
 ## Privacy and security
 
-The scorer is stdlib Python and runs locally. No script opens a network connection, and no skill fetches pages. The pack writes `brand-config.json`, `SOUL.md` and `evp-brief-<icp>.md` in your project root, and nothing else. No telemetry, no credentials, nothing sent or posted. See [SECURITY.md](SECURITY.md).
+The scorer is stdlib Python and runs locally. No script opens a network connection, and no skill fetches pages. The pack writes `brand-config.json` and `SOUL.md` in your project root and `gtm/evp-brief.md`, and nothing else. No telemetry, no credentials, nothing sent or posted. See [SECURITY.md](SECURITY.md).
 
 ## License
 

@@ -14,7 +14,16 @@ USAGE:
     python3 score_evp.py --evp "<line>" --tier 3 --icp "Series-B SaaS"
     python3 score_evp.py --file examples/t3.good.txt --tier 3
     echo '{"evp": "<line>", "tier": 3}' | python3 score_evp.py --stdin
-    python3 score_evp.py --file draft.json     # {"evp": ..., "tier": ..., "icp": ...}
+    python3 score_evp.py --file gtm/evp.json   # {"evp": ..., "tier": ..., "icp": ...}
+    python3 score_evp.py --file examples/t3.good.txt --tier 3 --json   # one JSON object
+
+OUTPUT:
+    Text by default. On exit 1 every reason prints as
+    "- <what is wrong> → <what to change>", then
+    "Next: fix the lines above and run this again." On exit 0 the last
+    line names the next suite step (Next: /cold-email:cold-email).
+    --json (alias of --format json) adds "reasons", "fixes" (parallel
+    lists) and "next"; existing keys are unchanged.
 
 ONE PROPOSITION:
     A score >= 70 prints the line under "# Proposition" (and "proposition"
@@ -184,7 +193,7 @@ def score_outcome(evp: str) -> AxisScore:
     notes = []
     evp_lower = evp.lower()
 
-    abstract_hits = [w for w in ABSTRACT_OUTCOMES if re.search(rf"\b{re.escape(w)}\b", evp_lower)]
+    abstract_hits = [w for w in sorted(ABSTRACT_OUTCOMES) if re.search(rf"\b{re.escape(w)}\b", evp_lower)]
     if abstract_hits:
         score -= min(15, len(abstract_hits) * 6)
         notes.append(f"Abstract verbs: {abstract_hits} — use concrete outcome")
@@ -213,7 +222,7 @@ def score_tradeoff(evp: str) -> AxisScore:
         notes.append("No 'without <tradeoff>' clause — EVPs need the tradeoff explicit")
     else:
         # Check for vague tradeoffs
-        for vague in VAGUE_TRADEOFFS:
+        for vague in sorted(VAGUE_TRADEOFFS):
             if vague in evp_lower:
                 score -= 8
                 notes.append(f"Vague tradeoff '{vague}' — replace with specific thing they'd give up")
@@ -231,7 +240,7 @@ def score_icp(evp: str, icp: Optional[str]) -> AxisScore:
         icp_words = set(re.findall(r"\b[A-Za-z]+\b", icp.lower()))
         evp_words = set(re.findall(r"\b[A-Za-z]+\b", evp.lower()))
         # Need at least one notable ICP word
-        notable_overlap = [w for w in icp_words if w in evp_words and len(w) > 3 and w not in {"with", "from", "that", "this", "their", "have", "they"}]
+        notable_overlap = [w for w in sorted(icp_words) if w in evp_words and len(w) > 3 and w not in {"with", "from", "that", "this", "their", "have", "they"}]
         if not notable_overlap:
             score -= 8
             notes.append(f"ICP '{icp}' not represented in line — name the segment explicitly")
@@ -315,6 +324,52 @@ def score_evp(evp: str, tier: Optional[int], icp: Optional[str]) -> EVPScore:
     )
 
 
+NEXT_STEP = "/cold-email:cold-email"
+RETRY = "fix the lines above and run this again."
+
+# Notes that are information, not problems.
+INFO_NOTE = re.compile(r"^(Word count:|ICP signals in line:|Tier-fit confirmed)")
+
+# Notes whose text after the dash is a reason, not a change to make.
+PREFIX_FIXES = (
+    ("Over 22-word limit", "cut words until it is 22 or fewer; keep the outcome and the tradeoff"),
+    ("Too short", "add the missing block: segment, outcome with a number, or 'without' tradeoff"),
+    ("No specific metric", "add a number and a timeframe from your will-claim list"),
+    ("No 'without <tradeoff>' clause", "add 'without <the thing they would otherwise give up>'"),
+    ("No segment indicator", "name the segment in the line (e.g. Series-B SaaS)"),
+    ("Requested Tier", "rewrite in the requested tier's shape, or score it at the tier it signals"),
+    ("No tier hallmarks detected", "use the requested tier's shape (see the tier table in the skill)"),
+    ("No tier hallmarks", "pass --tier and write in that tier's shape"),
+)
+
+LIST_FIX = "pick one line and score that line alone"
+
+
+def fix_lines(s: EVPScore) -> Tuple[List[str], List[str]]:
+    """Parallel reasons/fixes for a line that scores under 70."""
+    reasons = [f"score {s.total}/{s.max_total} is under 70"]
+    fixes = ["work through the axis lines below, lowest axis first"]
+    for axis in sorted(s.axes, key=lambda a: a.score - a.max_score):
+        for note in axis.notes:
+            if INFO_NOTE.search(note):
+                continue
+            what, _, fix = note.partition(" — ")
+            for prefix, better in PREFIX_FIXES:
+                if note.startswith(prefix):
+                    fix = better
+                    break
+            reasons.append(f"{axis.name}: {what}")
+            fixes.append(fix or "rewrite this part and score again")
+    return reasons, fixes
+
+
+def format_fixes(reasons: List[str], fixes: List[str]) -> List[str]:
+    lines = ["", "## What to fix"]
+    lines.extend(f"- {what} → {fix}" for what, fix in zip(reasons, fixes))
+    lines.extend(["", f"Next: {RETRY}"])
+    return lines
+
+
 def format_text(s: EVPScore) -> str:
     lines = [
         f"# EVP Score",
@@ -352,7 +407,11 @@ def fields_from_json(data: dict, cli_tier: Optional[int], cli_icp: Optional[str]
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description="Score one EVP line 0-100. Exit 0 at 70+, 1 under 70 or a list of lines, 2 bad input.",
+        epilog="example: python3 scripts/score_evp.py --file examples/t3.good.txt --tier 3 --icp \"Series-B SaaS\"",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     parser.add_argument("--evp", default="")
     parser.add_argument("--tier", type=int, default=None, choices=[1, 2, 3, 4, 5])
     parser.add_argument("--icp", default=None)
@@ -360,7 +419,10 @@ def main() -> int:
                         help='read {"evp": ..., "tier": ..., "icp": ...} JSON from stdin')
     parser.add_argument("--file", default=None,
                         help="read the EVP line from a text file (e.g. examples/t3.good.txt)")
-    parser.add_argument("--format", default="text", choices=["text", "json"])
+    parser.add_argument("--json", dest="format", action="store_const", const="json",
+                        help="print one JSON object (same as --format json)")
+    parser.add_argument("--format", dest="format", default="text", choices=["text", "json"],
+                        help=argparse.SUPPRESS)
     args = parser.parse_args()
 
     props: List[str] = []
@@ -392,10 +454,12 @@ def main() -> int:
 
     if props:
         if args.format == "json":
-            print(json.dumps({"refusal": REFUSAL, "items": len(props), "proposition": ""}, indent=2))
+            print(json.dumps({"refusal": REFUSAL, "items": len(props), "proposition": "",
+                              "reasons": [REFUSAL], "fixes": [LIST_FIX], "next": RETRY}, indent=2))
         else:
             print(f"Refusal: {REFUSAL}")
             print(f"  {len(props)} lines found. Pick one and score that line alone.")
+            print("\n".join(format_fixes([f"{REFUSAL} ({len(props)} lines found)"], [LIST_FIX])))
         return 1
 
     if not evp:
@@ -404,9 +468,13 @@ def main() -> int:
 
     result = score_evp(evp, tier, icp)
     passed = result.total >= 70
+    reasons, fixes = ([], []) if passed else fix_lines(result)
     if args.format == "json":
         payload = asdict(result)
         payload["proposition"] = result.evp if passed else ""
+        payload["reasons"] = reasons
+        payload["fixes"] = fixes
+        payload["next"] = NEXT_STEP if passed else RETRY
         print(json.dumps(payload, indent=2))
     else:
         print(format_text(result))
@@ -414,6 +482,10 @@ def main() -> int:
             print()
             print("# Proposition")
             print(result.evp)
+            print()
+            print(f"Next: {NEXT_STEP}")
+        else:
+            print("\n".join(format_fixes(reasons, fixes)))
     return 0 if passed else 1
 
 
