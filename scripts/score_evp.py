@@ -14,10 +14,17 @@ USAGE:
     python3 score_evp.py --evp "<line>" --tier 3 --icp "Series-B SaaS"
     python3 score_evp.py --file examples/t3.good.txt --tier 3
     echo '{"evp": "<line>", "tier": 3}' | python3 score_evp.py --stdin
+    python3 score_evp.py --file draft.json     # {"evp": ..., "tier": ..., "icp": ...}
+
+ONE PROPOSITION:
+    A score >= 70 prints the line under "# Proposition" (and "proposition"
+    in --format json). A list of value props, headline options or message
+    house lines (2+ items under value_props / headlines / options / pillars /
+    benefits / messages, or 2+ bullet lines in a text file) is refused.
 
 EXIT CODES:
     0  score >= 70 (ship or tighten)
-    1  score < 70 (rewrite)
+    1  score < 70 (rewrite), or a list of value props instead of one line
     2  bad input
 
 NO LLM. NO network. Pure regex + heuristics.
@@ -76,6 +83,44 @@ VAGUE_TRADEOFFS = {
 
 # Phrases that mark a real tradeoff clause. "without" is the canonical
 # JMC shape; the others carry the same job in Tier 2-4 reframes.
+# Keys that hold a list of lines: what a copy deck ships, not one proposition.
+LIST_KEYS = ("value_props", "headlines", "options", "pillars", "benefits", "messages")
+
+REFUSAL = "a list of value props is not one proposition"
+
+
+def string_items(value: object) -> List[str]:
+    if not isinstance(value, list):
+        return []
+    return [item.strip() for item in value if isinstance(item, str) and item.strip()]
+
+
+def prop_list(data: dict) -> List[str]:
+    """Two or more distinct lines under a list key (or inside message_house)."""
+    found: List[str] = []
+    for key in LIST_KEYS:
+        found.extend(string_items(data.get(key)))
+    house = data.get("message_house")
+    if isinstance(house, dict):
+        for key in LIST_KEYS:
+            found.extend(string_items(house.get(key)))
+    seen: List[str] = []
+    for item in found:
+        if item not in seen:
+            seen.append(item)
+    return seen if len(seen) >= 2 else []
+
+
+def bullet_props(text: str) -> List[str]:
+    """Two or more bulleted or numbered lines in a text draft."""
+    lines = []
+    for line in text.splitlines():
+        match = re.match(r"^(?:[-*•]|\d+[.)])\s+(.+)$", line.strip())
+        if match and match.group(1).strip():
+            lines.append(match.group(1).strip())
+    return lines if len(lines) >= 2 else []
+
+
 TRADEOFF_MARKERS = [
     r"\bwithout\b", r"\binstead of\b", r"\brather than\b",
     r"\bno need to\b", r"\bwon'?t fix\b", r"\bskip(ping)? the\b",
@@ -288,6 +333,24 @@ def format_text(s: EVPScore) -> str:
     return "\n".join(lines)
 
 
+def fields_from_json(data: dict, cli_tier: Optional[int], cli_icp: Optional[str]):
+    """evp / tier / icp from a JSON draft. Tier must be an integer 1-5."""
+    evp = data.get("evp", "")
+    if not isinstance(evp, str):
+        evp = ""
+    tier = data.get("tier")
+    if tier is not None and (isinstance(tier, bool) or tier not in (1, 2, 3, 4, 5)):
+        fail_input("tier must be an integer 1-5")
+    if tier is None:
+        tier = cli_tier
+    icp = data.get("icp")
+    if icp is not None and not isinstance(icp, str):
+        icp = None
+    if icp is None:
+        icp = cli_icp
+    return evp.strip(), tier, icp
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--evp", default="")
@@ -300,42 +363,58 @@ def main() -> int:
     parser.add_argument("--format", default="text", choices=["text", "json"])
     args = parser.parse_args()
 
+    props: List[str] = []
     if args.stdin:
         data = parse_json(read_stdin_text())
-        evp = data.get("evp", "")
-        if not isinstance(evp, str):
-            evp = ""
-        tier = data.get("tier")
-        if tier is not None and (isinstance(tier, bool) or tier not in (1, 2, 3, 4, 5)):
-            fail_input("tier must be an integer 1-5")
-        icp = data.get("icp")
-        if icp is not None and not isinstance(icp, str):
-            icp = None
+        props = prop_list(data)
+        evp, tier, icp = fields_from_json(data, args.tier, args.icp)
     elif args.file:
         try:
             with open(args.file, encoding="utf-8-sig") as fh:
-                evp = fh.read(MAX_INPUT_BYTES + 1).strip()
+                text = fh.read(MAX_INPUT_BYTES + 1)
         except (OSError, UnicodeDecodeError):
             fail_input("cannot read --file as UTF-8 text")
-        if len(evp) > MAX_INPUT_BYTES:
+        if len(text) > MAX_INPUT_BYTES:
             fail_input("input is too large")
-        tier = args.tier
-        icp = args.icp
+        if args.file.endswith(".json"):
+            data = parse_json(text)
+            props = prop_list(data)
+            evp, tier, icp = fields_from_json(data, args.tier, args.icp)
+        else:
+            props = bullet_props(text)
+            evp = text.strip()
+            tier = args.tier
+            icp = args.icp
     else:
         evp = args.evp
         tier = args.tier
         icp = args.icp
+
+    if props:
+        if args.format == "json":
+            print(json.dumps({"refusal": REFUSAL, "items": len(props), "proposition": ""}, indent=2))
+        else:
+            print(f"Refusal: {REFUSAL}")
+            print(f"  {len(props)} lines found. Pick one and score that line alone.")
+        return 1
 
     if not evp:
         print("--evp required.", file=sys.stderr)
         return 2
 
     result = score_evp(evp, tier, icp)
+    passed = result.total >= 70
     if args.format == "json":
-        print(json.dumps(asdict(result), indent=2))
+        payload = asdict(result)
+        payload["proposition"] = result.evp if passed else ""
+        print(json.dumps(payload, indent=2))
     else:
         print(format_text(result))
-    return 0 if result.total >= 70 else 1
+        if passed:
+            print()
+            print("# Proposition")
+            print(result.evp)
+    return 0 if passed else 1
 
 
 if __name__ == "__main__":

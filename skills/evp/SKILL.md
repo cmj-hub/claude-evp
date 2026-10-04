@@ -166,6 +166,13 @@ score next to each line you deliver. The scorer is a floor, not the
 judge: it cannot tell whether a claim is on the will-claim list, so the
 checklist below still applies.
 
+**One proposition.** Score each line on its own. A draft that holds a
+list (two or more `value_props`, `headlines`, `options`, `pillars`,
+`benefits` or `messages`, or two or more bullet lines in a text file)
+exits 1 with `Refusal: a list of value props is not one proposition`.
+A line that scores 70+ prints under `# Proposition` (`proposition` in
+`--format json`); that one line is what ships.
+
 For each variant, validate:
 
 - [ ] ≤22 words
