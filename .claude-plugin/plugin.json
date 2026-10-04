@@ -1,14 +1,14 @@
 {
   "name": "evp",
-  "icon": ".claude-plugin/icon.png",
-  "version": "0.4.0",
-  "description": "An Early Value Proposition is a \u226422-word line matched to a Schwartz awareness tier. Same product, five lines, because the unaware buyer and the vendor-comparing buyer are not the same reader.",
+  "version": "0.5.0",
+  "description": "An Early Value Proposition is a ≤22-word line matched to a Schwartz awareness tier. Same product, five lines, because the unaware buyer and the vendor-comparing buyer are not the same reader. Step 2 of the GTM operator suite.",
   "author": {
-    "name": "Jay Mount Consulting"
+    "name": "Jay Mount Consulting",
+    "url": "https://jaymountconsulting.com"
   },
-  "license": "MIT",
   "homepage": "https://jaymountconsulting.com/skills",
   "repository": "https://github.com/cmj-hub/claude-evp",
+  "license": "MIT",
   "keywords": [
     "evp",
     "value-proposition",
@@ -17,5 +17,6 @@
     "positioning",
     "b2b",
     "copywriting"
-  ]
+  ],
+  "icon": ".claude-plugin/icon.png"
 }

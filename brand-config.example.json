@@ -9,8 +9,16 @@
   },
 
   "psp": {
+    "signal_anchors": ["Posted Demand Gen Lead role ≤14 days"],
     "primary_pain": "Pipeline gap; existing demand-gen motion isn't producing enough SQLs",
-    "vocabulary": ["pipeline gap", "SDR ramp", "demand-gen motion isn't producing"]
+    "timing_trigger": "new-exec",
+    "felt_pain_role": "VP Demand Gen",
+    "vocabulary": [
+      "pipeline gap",
+      "SDR ramp",
+      "we keep closing wrong-fit logos",
+      "demand-gen motion isn't producing"
+    ]
   },
 
   "evp_drafts": {
@@ -36,6 +44,14 @@
     { "name": "AI SDR vendor", "axis": "Reply quality vs volume" },
     { "name": "In-house SDR build", "axis": "Time-to-payback" }
   ],
+
+  "evp": {
+    "tier": 3,
+    "primary": "For Series-B SaaS in a pipeline gap, we ship 14+ SQLs/month without hiring 2 more SDRs.",
+    "outcome": "14+ SQLs per month",
+    "tradeoff": "without hiring 2 more SDRs",
+    "proof": "Series-B SaaS hit 14 SQLs in 30 days from a PSP rewrite."
+  },
 
   "primary_outreach_tier": 3,
   "refresh_cadence_days": 90
