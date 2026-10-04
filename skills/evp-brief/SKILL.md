@@ -31,12 +31,17 @@ are we building this brief for? (Run again per segment.)"
 
 | Input | Source |
 |---|---|
-| `icp` | Specific ICP segment |
-| `psp` | PSP doc from claude-psp (or build inline) |
-| `outcome` | The specific result you deliver |
-| `tradeoff` | The obvious tradeoff you spare them |
-| `competitors` (optional) | Top 2-3 competitors for Tier 4 framing |
-| `proof_per_tier` (optional) | Case study / metric per tier |
+| `icp` | `brand-config.icp.segment` |
+| `psp` | `brand-config.psp` (or the claude-psp doc) |
+| `outcome` | `SOUL.md` → Outcomes I will claim |
+| `tradeoff` | `SOUL.md` → Tradeoffs I name |
+| `competitors` | `brand-config.competitors` — required for Tier 4 |
+| `proof_per_tier` | `SOUL.md` → Proofs in my reservoir |
+| existing drafts | `brand-config.evp_drafts.tier_{2,3,4}_*` — start from these, don't discard them |
+
+Missing `brand-config.json` or `SOUL.md` → stop and load
+`evp-onboarding`. No competitors → write Tiers 2 and 3, and mark
+Tier 4 "blocked: name 2-3 competitors in brand-config first".
 
 ### 3. Generate the brief
 
@@ -45,10 +50,20 @@ For each of Tier 2, Tier 3, Tier 4:
 - Audience description (what they know, what they don't)
 - Tier-appropriate pain framing
 - 1 primary EVP (best variant) + 1 alternate
-- Proof aligned to that tier (different proofs land at different tiers)
+- Proof aligned to that tier (different proofs land at different tiers),
+  quoted from the reservoir — if none fits, say so; never invent one
 - Where to deploy this EVP (which surfaces)
 
+Score every primary and alternate with
+`python3 "${CLAUDE_PLUGIN_ROOT}/scripts/score_evp.py" --evp "<line>" --tier <N> --icp "<icp>"`
+(plain-skills install: `scripts/score_evp.py`). Nothing under 70 goes
+in the brief.
+
 ### 4. Output
+
+Write the brief to `evp-brief-<icp-slug>.md` at the project root (ask
+before overwriting an existing one), then offer to copy each tier's
+primary line back into `brand-config.evp_drafts`.
 
 ```markdown
 # EVP Brief — <ICP>
@@ -146,6 +161,6 @@ and competitor positioning shifts.
 
 ## References
 
-- `../../evp/SKILL.md` — the framework
+- `../evp/SKILL.md` — the framework
 - Sister skill: `evp-craft` for single-tier generation
-- **EVP** course in The Compounding Engine:
+- [Early Value Propositions course](https://jaymountconsulting.com/learn/courses/early-value-propositions) — the human build guide

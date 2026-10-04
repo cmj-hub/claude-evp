@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.4.0] — 2026-10-04
+
+### Fixed
+- The main `evp` skill now loads in the plugin. It sat at `evp/SKILL.md`; Claude Code only discovers `skills/<name>/SKILL.md`, so `/evp` was missing from plugin installs. Moved to `skills/evp/`.
+- `score_evp.py` tier detection: Tier-4 lines could never be detected (the hallmark was the literal text `versus <name>`), any `$` read as Tier 5, and `vs` matched inside other words. Hallmarks are now word-boundary regexes; Tier 5 keys on a direct ask or a price per period. The pack's own Tier-2/3/4 example drafts now score full tier-fit.
+- `score_evp.py --stdin` rejects a tier that is not an integer 1-5 instead of silently mis-scoring.
+- `evp-onboarding` wrote to `evp_drafts.tier_3.*`; the key is `tier_3_solution_aware`.
+- `evp-kickoff` assumed Tier 3 as primary, never routed to Tier 4, and treated the shipped `SOUL.md` template as a filled-in one.
+- Broken relative links and dangling course references in sub-skills.
+
+### Added
+- `evp` skill restates the `AGENTS.md` rules (config gate, will-claim list, reservoir-only proof, banned stand-ins) and routes to sub-skills; adds `/evp score`.
+- `evp-craft` and `evp-brief` read inputs from `brand-config.json` + `SOUL.md`, score every variant with `score_evp.py`, and never fill an empty proof slot.
+- `evp-brief` writes `evp-brief-<icp>.md`; kickoff uses it and `refresh_cadence_days` to flag a stale brief.
+- `evp-onboarding` is user-invocable and will not overwrite existing config without a yes.
+- `score_evp.py --file`, tradeoff markers beyond "without" (`instead of`, `rather than`, `won't fix`), currency-prefixed metrics, and a stronger penalty for lines under 8 words.
+- `tests/test_scoring.py` pins the README numbers (100 / 59) and tier calibration.
+- Validator checks the `skills/<name>/SKILL.md` layout and relative links. Smoke test runs the validator, the examples, and the unit tests.
+- README skills table and plugin command names.
+
+### Unchanged
+- README scores: `examples/t3.good.txt` 100, `examples/t3.bad.txt` 59.
+
 ## [0.3.0] — 2026-09-08
 
 Public magnet pass. Instrument stays public. First loop is 15 minutes.

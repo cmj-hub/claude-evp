@@ -23,24 +23,38 @@ Loaded by `evp` on:
 ### 1. Lock the awareness tier
 
 Ask the user which Schwartz tier (1-5). If they don't know, walk them
-through the 5-tier table from `../../evp/SKILL.md` and ask: "Which
+through the 5-tier table from `../evp/SKILL.md` and ask: "Which
 describes your audience right now?"
 
+If the user names no tier, default to
+`brand-config.primary_outreach_tier`.
+
 Most B2B buyers are in Tiers 2-4. If the user says "Tier 5," push
-back — that's product-team thinking, not buyer-where-they-are
-thinking.
+back once — that's product-team thinking, not buyer-where-they-are
+thinking. If they confirm the reader really is ready to buy, write
+the Tier-5 line.
 
 ### 2. Capture the inputs
 
-Required:
-- `icp` — specific ICP segment
-- `psp_pain` — pain in the prospect's vocabulary (from claude-psp)
-- `outcome` — specific result you deliver
-- `tradeoff` — obvious tradeoff you spare them
-- `proof` (optional) — case study / metric backing it
+Read these from the project files before asking the user for anything:
 
-If PSP is missing, suggest the user run `claude-psp` first. EVPs
-without a PSP are guesses.
+| Input | Where it lives |
+|---|---|
+| `icp` | `brand-config.icp.segment` |
+| `psp_pain` | `brand-config.psp.primary_pain` + `psp.vocabulary` |
+| `outcome` | `SOUL.md` → Outcomes I will claim |
+| `tradeoff` | `SOUL.md` → Tradeoffs I name |
+| `proof` | `SOUL.md` → Proofs in my reservoir |
+| `competitors` (Tier 4) | `brand-config.competitors` |
+
+If `brand-config.json` or `SOUL.md` is missing, stop and load
+`evp-onboarding`. If PSP is missing, suggest the user run `claude-psp`
+first. EVPs without a PSP are guesses.
+
+If the user asks for an outcome that is not on the will-claim list,
+refuse it and show the list. If the outcome is vague ("more pipeline",
+"better efficiency"), ask for the number and timeframe instead of
+guessing one.
 
 ### 3. Generate 3 variants
 
@@ -73,7 +87,16 @@ you want immediate exclusion-by-segment (signals fit fast).
 
 ### 4. Validate each variant
 
-Run the self-check:
+Score each variant with the deterministic scorer:
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/score_evp.py" \
+  --evp "<variant>" --tier <N> --icp "<icp segment>"
+```
+
+(Plain-skills install: `scripts/score_evp.py` from the pack root.)
+Exit 1 means under 70 — rewrite before showing it. Then run the
+self-check, which covers what the scorer cannot see:
 
 | Check | Pass criterion |
 |---|---|
@@ -83,6 +106,8 @@ Run the self-check:
 | ICP named | Segment is specific enough to exclude wrong-fit |
 | Pain vocabulary | Uses their words from the PSP, not category jargon |
 | Tier-appropriate | Matches the awareness tier (no Tier-5 line for a Tier-2 audience) |
+| Claim allowed | Outcome is on the SOUL.md will-claim list |
+| Proof real | Proof is quoted from the SOUL.md reservoir, or the slot says "none yet" |
 
 ### 5. Output
 
@@ -92,13 +117,13 @@ Run the self-check:
 **Pain anchor:** <PSP pain in their language>
 
 ## Variant A — outcome-led
-"<22-word line>"
+"<22-word line>" — <score>/100
 
 ## Variant B — tradeoff-led
-"<22-word line>"
+"<22-word line>" — <score>/100
 
 ## Variant C — ICP-led
-"<22-word line>"
+"<22-word line>" — <score>/100
 
 ## Recommended primary
 <A / B / C> — <one-sentence rationale>
@@ -110,7 +135,8 @@ Run the self-check:
 - Sales call opener (calibrate to where prospect is)
 
 ## Proof to back it
-<Case study / metric / social proof aligned to this tier>
+<Quoted from the SOUL.md reservoir. If nothing fits this tier, write
+"None in reservoir yet — add one before this line ships." Never invent.>
 ```
 
 ### 6. Surgical critique mode
@@ -120,6 +146,7 @@ If user pastes an existing EVP for critique, return:
 ```
 Original: "<their EVP>"
 Word count: <N>
+Score: <scorer total>/100
 Tier-fit: <which tier this actually lands on>
 
 Issues:
@@ -133,5 +160,5 @@ Rationale: <one sentence>
 
 ## References
 
-- `../../evp/SKILL.md` — the framework
-- The **EVP** course in The Compounding Engine:
+- `../evp/SKILL.md` — the framework
+- [Early Value Propositions course](https://jaymountconsulting.com/learn/courses/early-value-propositions) — the human build guide

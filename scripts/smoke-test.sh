@@ -1,24 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
+cd "$(dirname "$0")/.."
 PASSED=0; FAILED=0
-check() { local n="$1"; shift; if "$@"; then echo "  ✓ $n"; PASSED=$((PASSED+1)); else echo "  ✗ $n"; FAILED=$((FAILED+1)); fi; }
+check() { local n="$1"; shift; if "$@" > /dev/null 2>&1; then echo "  ✓ $n"; PASSED=$((PASSED+1)); else echo "  ✗ $n"; FAILED=$((FAILED+1)); fi; }
+reject() { local n="$1"; shift; if "$@" > /dev/null 2>&1; then echo "  ✗ $n (expected non-zero exit)"; FAILED=$((FAILED+1)); else echo "  ✓ $n"; PASSED=$((PASSED+1)); fi; }
+
+echo "=== skill structure ==="
+check "SKILL.md frontmatter + layout" python3 scripts/validate-skill-frontmatter.py
 
 echo "=== score_evp.py ==="
-check "strong T3 EVP" \
-  python3 scripts/score_evp.py \
-    --evp "For Series-B SaaS in a pipeline gap, we ship 14+ SQLs per month without hiring 2 more SDRs." \
-    --tier 3 \
-    --icp "Series-B SaaS"
+check "examples/t3.good.txt passes" \
+  python3 scripts/score_evp.py --file examples/t3.good.txt --tier 3 --icp "Series-B SaaS"
+reject "examples/t3.bad.txt rejected" \
+  python3 scripts/score_evp.py --file examples/t3.bad.txt --tier 3
 
-# Abstract EVP should fail
-echo "  (testing inverse — abstract EVP should exit non-zero)"
-if python3 scripts/score_evp.py --evp "We help companies improve their growth and optimize outcomes." --tier 3 > /dev/null 2>&1; then
-  echo "  ✗ abstract EVP should have failed but passed"
-  FAILED=$((FAILED+1))
-else
-  echo "  ✓ abstract EVP correctly rejected"
-  PASSED=$((PASSED+1))
-fi
+echo "=== unit tests ==="
+check "tests/" python3 -m unittest discover -s tests
 
 echo ""; echo "Passed: $PASSED, Failed: $FAILED"
 [ "$FAILED" -eq 0 ]

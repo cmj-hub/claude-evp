@@ -11,6 +11,7 @@ description: >
   pricing pages, and sales-call openings. Triggers on: "write an EVP",
   "value proposition", "elevator pitch", "positioning statement", "hero
   copy", "EVP brief", "what's our angle", "messaging by awareness level".
+argument-hint: "[craft <tier> | brief | score <line>]"
 allowed-tools: Read Write Grep
 license: MIT
 
@@ -28,6 +29,42 @@ for each tier of your audience — because the line that lands on a
 solution-aware prospect won't land on someone unaware they have the
 problem.
 
+## Before you write anything (non-negotiable)
+
+These are the rules in `AGENTS.md`, restated here because a plugin does
+not load that file on its own.
+
+1. **Load `brand-config.json` and `SOUL.md` from the project root.** If
+   either is missing, or `SOUL.md` still holds template placeholders
+   (`<e.g. ...>`, `<...>`), stop and route to `evp-onboarding`. Do not
+   draft a "generic" EVP in the meantime.
+2. **Claim only outcomes on the operator's will-claim list** in `SOUL.md`.
+   Anything outside it gets refused, with the list shown back.
+3. **Cite proof only from the reservoir** in `SOUL.md`. If no proof fits
+   the tier, say so and leave the slot empty. Never invent a case study,
+   metric, or percentage.
+4. **≤22 words.** Hard limit, not a target.
+5. **Tier-fit.** Write to the tier the user asked for, else
+   `brand-config.primary_outreach_tier`. Never a Tier-5 line for a
+   Tier-2 reader.
+6. **Schwartz tiers only.** Unaware / problem-aware / solution-aware /
+   product-aware / most-aware. Do not translate into TOFU/MOFU/BOFU.
+7. **Banned stand-ins:** improve, optimize, enhance, drive growth,
+   predictable, scalable, best-in-class. Replace with a number and a
+   timeframe from the will-claim list.
+
+## Routing
+
+| User says | Load |
+|---|---|
+| `/evp` with no arguments, "where do I start" | `evp-kickoff` |
+| config or SOUL missing, "set up EVP" | `evp-onboarding` |
+| `/evp craft <tier>`, "Tier 3 EVP", "critique this EVP" | `evp-craft` |
+| `/evp brief`, "3-tier brief" | `evp-brief` |
+| `/evp score "<line>"` | Run the scorer (below) and report |
+
+Arguments passed to the skill: `$ARGUMENTS`
+
 ## Quick reference
 
 | Slash | What it does |
@@ -35,6 +72,9 @@ problem.
 | `/evp` | Interactive — build an EVP for a specific awareness tier |
 | `/evp craft <tier>` | Generate 3 EVP variants for one awareness tier |
 | `/evp brief` | Build a structured 3-tier brief (Schwartz tiers 2/3/4) |
+| `/evp score "<line>" [tier]` | Score an existing line 0-100 with the deterministic scorer |
+
+In a plugin install the command is namespaced: `/evp:evp craft 3`.
 
 ## The framework
 
@@ -106,6 +146,20 @@ Validate each against the 22-word constraint.
 
 ### 3. Self-check
 
+Score every variant with the deterministic scorer before showing it:
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/score_evp.py" \
+  --evp "<variant>" --tier <N> --icp "<icp segment>"
+```
+
+If `${CLAUDE_PLUGIN_ROOT}` is not expanded (the pack was installed as
+plain skills, not as a plugin), use `scripts/score_evp.py` from the pack
+root. Exit 0 = score ≥70. Rewrite any variant that exits 1 and show the
+score next to each line you deliver. The scorer is a floor, not the
+judge: it cannot tell whether a claim is on the will-claim list, so the
+checklist below still applies.
+
 For each variant, validate:
 
 - [ ] ≤22 words
@@ -114,6 +168,8 @@ For each variant, validate:
 - [ ] ICP named explicitly
 - [ ] Pain matches the PSP's vocabulary
 - [ ] Variant fits the awareness tier (not a Tier-5 line for a Tier-2 reader)
+- [ ] Outcome is on the SOUL.md will-claim list
+- [ ] Proof, if cited, is quoted from the SOUL.md reservoir
 
 ### 4. Offer the brief mode
 
@@ -124,14 +180,16 @@ After delivering single-tier EVPs, offer:
 
 ## Sub-skills
 
-- [`skills/evp-craft`](../skills/evp-craft) — single-tier EVP generation
-- [`skills/evp-brief`](../skills/evp-brief) — structured 3-tier brief
+- [`evp-kickoff`](../evp-kickoff/SKILL.md) — state router for bare `/evp`
+- [`evp-onboarding`](../evp-onboarding/SKILL.md) — first-run brand-config + SOUL setup
+- [`evp-craft`](../evp-craft/SKILL.md) — single-tier EVP generation and critique
+- [`evp-brief`](../evp-brief/SKILL.md) — structured 3-tier brief
 
 ## Plugs into
 
 - **[claude-cold-email](https://github.com/cmj-hub/claude-cold-email)** — EVP is line 3 of every cold email
 - **[claude-psp](https://github.com/cmj-hub/claude-psp)** — PSP is the pain layer underneath every EVP
-- **JMC EVP Generator course** — the deep methodology
+- **[Early Value Propositions course](https://jaymountconsulting.com/learn/courses/early-value-propositions)** — the human build guide
 
 ## Free hosted version
 

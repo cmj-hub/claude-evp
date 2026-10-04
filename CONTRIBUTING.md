@@ -13,7 +13,7 @@ before you contribute.
 - **Calibration improvements** to the scoring scripts — if you can
   show a case where the script scores wrong, that's gold.
 - **Cross-runtime ports** (Cursor, Gemini CLI, Codex) — see the
-  `Cross-runtime` section of the README.
+  `Install` section of the README.
 - **Translation** of the framework reference docs.
 
 ## What doesn't land
@@ -31,8 +31,8 @@ before you contribute.
 ```bash
 git clone https://github.com/cmj-hub/<this-repo>.git
 cd <this-repo>
-# Test the install locally
-./install.sh   # or install.ps1 on Windows
+# Validate skills, score the examples, run the unit tests
+bash scripts/smoke-test.sh
 ```
 
 For Python scripts:
@@ -45,7 +45,9 @@ python3 scripts/<script>.py --help
 ## Pull-request checklist
 
 - [ ] Skill names follow the spec (lowercase, hyphens, ≤64 chars,
-      directory matches `name:` in frontmatter)
+      directory matches `name:` in frontmatter), and every skill lives
+      at `skills/<name>/SKILL.md` — the only path a plugin loads
+- [ ] `bash scripts/smoke-test.sh` passes
 - [ ] Sub-skill descriptions include trigger phrases inline
 - [ ] If you touch a script, smoke-test it and paste output in the PR
 - [ ] If you add a new sub-skill, list it in the README catalog table
@@ -55,16 +57,20 @@ python3 scripts/<script>.py --help
 
 ## Reporting calibration issues with scoring scripts
 
-If a script (`spam_word_lint.py` / `score_psp.py` / `score_evp.py` /
-`score_post.py`) scores something obviously wrong:
+If `scripts/score_evp.py` scores something obviously wrong:
 
 1. Paste the input that produced the wrong score
 2. State your expected score + actual score
 3. Note which axis is mis-calibrated
 
-The scripts are calibrated against ~1,000 real B2B campaigns. New
-calibration cases add to the lexicons in version-controlled JSON, not
-to the script logic — keep the deterministic path stable.
+Fixes land as a new case in `tests/test_scoring.py` plus a change to the
+lexicons at the top of `score_evp.py` (`ABSTRACT_OUTCOMES`,
+`TRADEOFF_MARKERS`, `TIER_HALLMARKS`). The README quotes 100 for
+`examples/t3.good.txt` and 59 for `examples/t3.bad.txt`; the tests pin
+both, so a change that moves them must update the README too.
+
+Keep the deterministic path stable: change lexicons, not scoring logic,
+where you can.
 
 ## License
 
