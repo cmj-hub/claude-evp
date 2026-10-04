@@ -8,7 +8,7 @@ before you contribute.
 - **Bug reports** — open an issue with a reproducible case. The
   scripts in `scripts/` are deterministic, so bugs there are usually
   one-line fixes.
-- **New sub-skills** that extend the existing framework. Discuss in
+- **New modes** (`skills/evp/modes/<mode>.md`) that extend the existing framework. Discuss in
   an issue first if it's a substantial addition.
 - **Calibration improvements** to the scoring scripts — if you can
   show a case where the script scores wrong, that's gold.
@@ -45,12 +45,13 @@ python3 scripts/<script>.py --help
 ## Pull-request checklist
 
 - [ ] Skill names follow the spec (lowercase, hyphens, ≤64 chars,
-      directory matches `name:` in frontmatter), and every skill lives
-      at `skills/<name>/SKILL.md` — the only path a plugin loads
+      directory matches `name:` in frontmatter). The pack keeps one
+      skill, `skills/evp/SKILL.md`; new jobs are mode files
 - [ ] `bash scripts/smoke-test.sh` passes
-- [ ] Sub-skill descriptions include trigger phrases inline
 - [ ] If you touch a script, smoke-test it and paste output in the PR
-- [ ] If you add a new sub-skill, list it in the README catalog table
+- [ ] If you add a new mode, list it in the README table, the routing
+      table and `argument-hint` in `skills/evp/SKILL.md`, and add a
+      trigger eval under `evals/`
 - [ ] CHANGELOG.md updated
 - [ ] No new dependencies (any of: pip packages, npm packages, API
       keys, paid services)

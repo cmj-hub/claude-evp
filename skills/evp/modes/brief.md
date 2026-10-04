@@ -1,22 +1,18 @@
----
-name: evp-brief
-description: "Builds a structured 3-tier EVP brief: Tier 2 (problem-aware), Tier 3 (solution-aware), Tier 4 (product-aware), side by side with audience, pain, primary and alternate lines, and proof per tier. The single source your hero, ads, cold email and pricing page pull from. Use when the main evp skill routes a request for a full brief or messaging across awareness levels."
-user-invocable: false
-allowed-tools: Read Write Grep Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/score_evp.py:*)
-license: MIT
-models: ""
-
----
-
-# EVP Brief — sub-skill
+# Brief — three tiers side by side
 
 Produces a structured 3-tier EVP brief covering the three tiers where
 most B2B buyers live: Tier 2 (problem-aware), Tier 3 (solution-aware),
 Tier 4 (product-aware).
 
+## Contents
+
+- Activation
+- Workflow
+- References
+
 ## Activation
 
-Loaded by `evp` on:
+`/evp:evp brief`, or:
 - "Build an EVP brief"
 - "3-tier brief"
 - "EVP across awareness levels"
@@ -40,8 +36,8 @@ are we building this brief for? (Run again per segment.)"
 | `proof_per_tier` | `SOUL.md` → Proofs in my reservoir |
 | existing drafts | `brand-config.evp_drafts.tier_{2,3,4}_*` — start from these, don't discard them |
 
-Missing `brand-config.json` or `SOUL.md` → stop and load
-`evp-onboarding`. No competitors → write Tiers 2 and 3, and mark
+Missing `brand-config.json` or `SOUL.md` → stop and run the
+[setup](setup.md) mode. No competitors → write Tiers 2 and 3, and mark
 Tier 4 "blocked: name 2-3 competitors in brand-config first".
 
 ### 3. Generate the brief
@@ -62,10 +58,11 @@ in the brief.
 
 ### 4. Output
 
-Write the brief to `evp-brief-<icp-slug>.md` at the project root (ask
-before overwriting an existing one), then offer to copy each tier's
+Write the brief to `gtm/evp-brief.md` in the operator's project
+(create `gtm/` if it is missing; ask before overwriting an existing
+one), then offer to copy each tier's
 primary line back into `brand-config.evp_drafts`. Merge at the field
-level: write only `evp_drafts` (and `evp`, per `evp-craft` Step 7, if
+level: write only `evp_drafts` (and `evp`, per [craft](craft.md) Step 7, if
 the operator picks the primary-tier line as the outreach line), leave
 every other key as it was, and ask before changing a filled field.
 
@@ -165,6 +162,6 @@ and competitor positioning shifts.
 
 ## References
 
-- `../evp/SKILL.md` — the framework
-- Sister skill: `evp-craft` for single-tier generation
+- The framework: the main `evp` skill
+- [craft.md](craft.md) for single-tier generation
 - [Early Value Propositions course](https://jaymountconsulting.com/learn/courses/early-value-propositions) — the human build guide

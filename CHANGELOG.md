@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.7.0] — 2026-10-04
+
+One skill per pack. The four sub-skills are modes of `evp`, read on demand.
+
+### Moved
+- `/evp:evp-onboarding` → `/evp:evp setup` (`skills/evp/modes/setup.md`). `onboarding` still routes there.
+- `evp-kickoff` → `/evp:evp status` (`skills/evp/modes/status.md`). Also runs on a bare `/evp:evp`.
+- `evp-craft` → `/evp:evp craft <tier>` (`skills/evp/modes/craft.md`).
+- `evp-brief` → `/evp:evp brief` (`skills/evp/modes/brief.md`).
+- The brief is saved to `gtm/evp-brief.md` (was `evp-brief-<icp-slug>.md` at the project root). `status` still finds an old-named brief.
+
+### Changed
+- Always-on cost drops from ~873 to ~208 tokens: one skill description instead of five.
+- `argument-hint` lists the modes; `$ARGUMENTS` routes straight to one.
+- Setup asks the shared `operator`/`icp` questions only when they are empty, and points at `/gtm:setup` to ask them once for the suite.
+- A locked outreach line ends with `Next: /cold-email:cold-email`.
+- `score_evp.py`: `--json` (alias of `--format json`); exit-1 output lists every reason as `- what is wrong → what to change` and ends `Next: fix the lines above and run this again.`; exit 0 ends `Next: /cold-email:cold-email`. JSON gains `reasons`, `fixes` and `next`; existing keys are unchanged. `--help` shows an example.
+
+### Added
+- `evals/`: five trigger cases (four should fire `evp`, one cold-email near-miss should not). `.github/workflows/evals.yml` runs them on manual dispatch when `ANTHROPIC_API_KEY` is set.
+- README "In 60 seconds".
+- `tests/test_cli.py`.
+
 ## [0.6.0] — 2026-10-04
 
 Ports the one-proposition rule from `feat/one-proposition` onto current main.

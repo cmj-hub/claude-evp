@@ -1,20 +1,16 @@
----
-name: evp-craft
-description: "Generates and scores 3 EVP variants for one Schwartz awareness tier (outcome-led, tradeoff-led, ICP-led), each in the 22-word shape, and critiques a pasted line. Publishes the chosen primary-tier line to brand-config.json as the evp block. Use when the main evp skill routes a request for a line at one tier or a critique of an existing line."
-user-invocable: false
-allowed-tools: Read Write Grep Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/score_evp.py:*)
-license: MIT
-models: ""
+# Craft — three lines for one tier
 
----
+Generates and scores 3 EVP variants for one awareness tier, critiques a pasted line, and publishes the chosen outreach line.
 
-# EVP Craft — sub-skill
+## Contents
 
-Generates 3 EVP variants for a specific awareness tier.
+- Activation
+- Workflow
+- References
 
 ## Activation
 
-Loaded by `evp` on:
+`/evp:evp craft <tier>`, or:
 - "Write an EVP for <tier>"
 - "EVP for solution-aware prospects"
 - "Tier 3 EVP"
@@ -24,7 +20,7 @@ Loaded by `evp` on:
 ### 1. Lock the awareness tier
 
 Ask the user which Schwartz tier (1-5). If they don't know, walk them
-through the 5-tier table from `../evp/SKILL.md` and ask: "Which
+through the 5-tier table in the main skill and ask: "Which
 describes your audience right now?"
 
 If the user names no tier, default to
@@ -48,8 +44,8 @@ Read these from the project files before asking the user for anything:
 | `proof` | `SOUL.md` → Proofs in my reservoir |
 | `competitors` (Tier 4) | `brand-config.competitors` |
 
-If `brand-config.json` or `SOUL.md` is missing, stop and load
-`evp-onboarding`. If neither `psp` nor `psp_drafts.primary` exists,
+If `brand-config.json` or `SOUL.md` is missing, stop and run the
+[setup](setup.md) mode. If neither `psp` nor `psp_drafts.primary` exists,
 stop: the psp pack produces it (`/psp:psp`; install with
 `/plugin install psp@gtm-operator-skills`). Never invent the pain.
 EVPs without a PSP are guesses.
@@ -98,14 +94,14 @@ python3 ${CLAUDE_PLUGIN_ROOT}/scripts/score_evp.py \
 ```
 
 (Plain-skills install: `scripts/score_evp.py` from the pack root.)
-Exit 1 means under 70 — rewrite before showing it.
+Exit 1 means under 70 — each `- what → fix` line says what to change; rewrite before showing it.
 
 **One proposition.** Score each line on its own. A draft that holds a
 list (two or more `value_props`, `headlines`, `options`, `pillars`,
 `benefits` or `messages`, or two or more bullet lines in a text file)
 exits 1 with `Refusal: a list of value props is not one proposition`.
 A line that scores 70+ prints under `# Proposition` (`proposition` in
-`--format json`); that one line is what ships.
+`--json`); that one line is what ships.
 
 Then run the self-check, which covers what the scorer cannot see:
 
@@ -196,7 +192,11 @@ field level: read the existing file, write only `evp_drafts` and
 `evp`, leave every other key exactly as it was, and show the diff and
 ask before changing a field that already has a value.
 
+Then end with one line: `Next: /cold-email:cold-email` (or
+`/plugin install cold-email@gtm-operator-skills` if it is not
+installed).
+
 ## References
 
-- `../evp/SKILL.md` — the framework
+- The framework: the tier table and EVP shape in the main `evp` skill
 - [Early Value Propositions course](https://jaymountconsulting.com/learn/courses/early-value-propositions) — the human build guide

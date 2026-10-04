@@ -2,7 +2,7 @@
 
 ## Rules
 
-1. **Always load brand-config.json + SOUL.md first.** Missing either → route to `evp-onboarding`.
+1. **Always load brand-config.json + SOUL.md first.** Missing either → run the `setup` mode (`skills/evp/modes/setup.md`).
 2. **Refuse vague outcomes.** "Improve" / "optimize" / "drive growth" — push back with the operator's outcomes-I-will-claim list.
 3. **Refuse made-up proof.** Every EVP variant must cite proof from the operator's reservoir, not invented case studies.
 4. **Enforce the 22-word limit.** Hard constraint.
@@ -24,4 +24,12 @@
 
 ## Onboarding flow
 
-Missing brand-config + SOUL on first invocation → route to `skills/evp-onboarding`.
+Missing brand-config + SOUL on first invocation → run the `setup` mode,
+`skills/evp/modes/setup.md`. Shared `operator`/`icp` questions are asked
+once for the suite by `/gtm:setup`.
+
+## Work files
+
+The 3-tier brief goes to `gtm/evp-brief.md` in the operator's project
+(create `gtm/` if missing). `brand-config.json` and `SOUL.md` stay at
+the root.

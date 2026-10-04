@@ -1,24 +1,20 @@
----
-name: evp-onboarding
-description: "First-run setup for the EVP pack: pulls ICP and pain from the PSP, then captures primary awareness tier, outcomes-I-will-claim, tradeoffs, proofs reservoir and competitors in brand-config.json, and tier voice and won't-claim list in SOUL.md, in about 10 minutes. Merges into existing shared files at the field level. Refuses to let the operator skip; a generic EVP is worse than none. Use when brand-config.json or SOUL.md is missing, or the operator asks to set up EVP config."
-allowed-tools: Read Write Grep
-license: MIT
-models: ""
-
----
-
-# EVP Onboarding — first-run setup
+# Setup — first-run EVP config
 
 10 minutes of setup that makes every downstream EVP differentiated
 instead of generic.
 
+## Contents
+
+- Activation
+- Workflow
+- References
+
 ## Activation
 
-Loaded automatically by `evp` orchestrator when `brand-config.json`
-or `SOUL.md` is missing.
+Runs first when `brand-config.json` or `SOUL.md` is missing.
 
-Also user-invocable: `/evp-onboarding` (plugin: `/evp:evp-onboarding`),
-"Set up EVP brand config", "EVP onboarding".
+Also `/evp:evp setup` (`onboarding` works too), "Set up EVP brand
+config", "EVP onboarding".
 
 Templates: `brand-config.example.json` and `SOUL.md` ship at the pack
 root (`${CLAUDE_PLUGIN_ROOT}` in a plugin install). Use them as the
@@ -31,6 +27,18 @@ Every answer is the operator's own. Do not suggest outcomes, metrics,
 or proofs for them to accept; the examples below show the shape only.
 
 ## Workflow
+
+### Step 0 — Shared basics (once for the whole suite)
+
+`operator` (name, company, title, calendar_url) and `icp` (segment,
+role_targets, exclusion_criteria; stage, size_range, geos optional) are
+shared by every pack. If they are filled, skip this step.
+
+If they are missing, say: "Run `/gtm:setup` once for the whole suite."
+If the gtm plugin is not installed (`/plugin install
+gtm@gtm-operator-skills`), ask only those shared questions inline, in
+one short batch, and fill gaps only. Then go on with the EVP questions
+below; do not ask the shared ones again.
 
 ### Step 1 — ICP + PSP carry-forward
 
@@ -178,14 +186,14 @@ by every pack in the suite, so merge at the field level:
   value.
 - `operator` and `icp` are shared: fill gaps only.
 - `SOUL.md`: append or update only this pack's own `## ` sections (the
-  ones in the pack's [SOUL.md](../../SOUL.md) template); never rewrite
+  ones in the pack's [SOUL.md](../../../SOUL.md) template); never rewrite
   another pack's section.
 
 Replace every `<...>` placeholder in this pack's SOUL sections — a
-placeholder left behind makes `evp-kickoff` route back here. Leave `evp_drafts.*.primary` empty
+placeholder left behind makes the [status](status.md) mode route back here. Leave `evp_drafts.*.primary` empty
 unless the operator already has a line they want to keep. If they
 keep one for the primary outreach tier, publish it as the `evp` block
-(shape in `evp-craft` Step 7); otherwise `evp` waits until they pick a
+(shape in [craft](craft.md) Step 7); otherwise `evp` waits until they pick a
 line. Show:
 
 ```
@@ -199,11 +207,13 @@ The output will use:
 - Your outcomes-will-claim list (refuses outside it)
 - Your tradeoffs
 - Proofs from your reservoir
+
+Next: /evp:evp craft
 ```
 
 ## References
 
-- `../../brand-config.example.json`
-- [SOUL.md](../../SOUL.md)
-- `../../AGENTS.md`
-- Sister skills: `evp-craft`, `evp-brief`
+- `brand-config.example.json` (pack root)
+- [SOUL.md](../../../SOUL.md)
+- `AGENTS.md` (pack root)
+- Other modes: [craft.md](craft.md), [brief.md](brief.md)

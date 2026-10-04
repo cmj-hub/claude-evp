@@ -1,19 +1,7 @@
 ---
 name: evp
-description: >
-  Writes an Early Value Proposition (EVP): a line of 22 words or fewer,
-  matched to one Schwartz awareness tier (unaware, problem-aware,
-  solution-aware, product-aware, most-aware), in the shape "For {ICP} in
-  {pain}, we're the {one team} that does {specific outcome} without
-  {obvious tradeoff}." Also builds a 3-tier brief (tiers 2-4) and scores
-  any line 0-100 with a bundled script. Reads the PSP from brand-config.json
-  and publishes the chosen outreach line as the `evp` block. Use when the
-  operator asks for an EVP, value proposition, positioning line, elevator
-  pitch, hero line, or messaging by awareness level, or wants a line
-  scored. Not for building the pain profile underneath it (use psp), not
-  for the full cold email or sequence (use cold-email), not for the
-  landing page (use landing-page).
-argument-hint: "[craft <tier> | brief | score <line>]"
+description: "Writes and scores an Early Value Proposition (EVP): one line of 22 words or fewer matched to a Schwartz awareness tier, in the shape \"For {ICP} in {pain}, we're the {one team} that does {outcome} without {tradeoff}.\" Builds a 3-tier brief and publishes the chosen outreach line as the evp block. Use when the operator asks for an EVP, value proposition, positioning or hero line, messaging by awareness level, or a line scored. Not for the pain profile under it (use psp), the cold email (use cold-email), or the landing page (use landing-page)."
+argument-hint: "[craft <tier> | brief | score <line> | status | setup]"
 allowed-tools: Read Write Grep Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/score_evp.py:*)
 license: MIT
 models: ""
@@ -40,7 +28,7 @@ not load that file on its own.
 1. **Load `brand-config.json` and [SOUL.md](../../SOUL.md) from the
    project root.** Both are shared by every pack in the suite. If
    either is missing, or `SOUL.md` still holds template placeholders
-   (`<e.g. ...>`, `<...>`), stop and route to `evp-onboarding`. Do not
+   (`<e.g. ...>`, `<...>`), stop and run the `setup` mode. Do not
    draft a "generic" EVP in the meantime.
 2. **Claim only outcomes on the operator's will-claim list** in `SOUL.md`.
    Anything outside it gets refused, with the list shown back.
@@ -59,26 +47,28 @@ not load that file on its own.
 
 ## Routing
 
-| User says | Load |
+Route by `$ARGUMENTS`. If it names a mode, go straight to it. If it is
+empty, run `status`. Otherwise match the request to a row. Read the
+mode file with the Read tool and follow it. Config or SOUL missing →
+`setup` first, whatever was asked.
+
+| You say / argument | Mode file |
 |---|---|
-| `/evp` with no arguments, "where do I start" | `evp-kickoff` |
-| config or SOUL missing, "set up EVP" | `evp-onboarding` |
-| `/evp craft <tier>`, "Tier 3 EVP", "critique this EVP" | `evp-craft` |
-| `/evp brief`, "3-tier brief" | `evp-brief` |
-| `/evp score "<line>"` | Run the scorer (below) and report |
+| (nothing), `status`, "where do I start", "what's next" | [modes/status.md](modes/status.md) |
+| `setup`, `onboarding`, "set up EVP" | [modes/setup.md](modes/setup.md) |
+| `craft <tier>`, "Tier 3 EVP", "critique this EVP" | [modes/craft.md](modes/craft.md) |
+| `brief`, "3-tier brief" | [modes/brief.md](modes/brief.md) |
+| `score "<line>" [tier]` | no file: run the scorer (below) and report |
 
 Arguments passed to the skill: `$ARGUMENTS`
 
-## Quick reference
+The command is `/evp:evp <mode>`, e.g. `/evp:evp craft 3`. Moved in
+0.7: the old sub-skills (`evp-kickoff`, `evp-onboarding`, `evp-craft`,
+`evp-brief`) are these modes.
 
-| Slash | What it does |
-|---|---|
-| `/evp` | Interactive — build an EVP for a specific awareness tier |
-| `/evp craft <tier>` | Generate 3 EVP variants for one awareness tier |
-| `/evp brief` | Build a structured 3-tier brief (Schwartz tiers 2/3/4) |
-| `/evp score "<line>" [tier]` | Score an existing line 0-100 with the deterministic scorer |
-
-In a plugin install the command is namespaced: `/evp:evp craft 3`.
+Files this pack writes in the operator's project: `brand-config.json`
+and `SOUL.md` at the root (shared), and the brief at `gtm/evp-brief.md`.
+Create `gtm/` if it is missing.
 
 ## The framework
 
@@ -122,81 +112,42 @@ Most B2B buyers live in Tiers 2-4. Most operators write EVPs for Tier
 - **Sales call opener** — calibrated to where the prospect is on the tier ladder
 - **Ad creative** — usually Tier 1 or Tier 2 (problem reveal)
 
-## Workflow
+## Score a line
 
-### 1. Capture the inputs
-
-| Input | Source |
-|---|---|
-| `icp` | ICP segment (specific, not "B2B SaaS") |
-| `psp` | `brand-config.psp` (`primary_pain`, `vocabulary`); fallback `brand-config.psp_drafts.primary` |
-| `outcome` | The specific result you deliver |
-| `tradeoff` | The obvious tradeoff you spare them |
-| `awareness_tier` | Which Schwartz tier (1-5) we're writing for |
-| `proof` | (Optional) Case study / metric / social proof for the tier |
-
-If neither `psp` nor `psp_drafts.primary` is in `brand-config.json`,
-stop: the psp pack produces it. Point the user to `/psp:psp` (install
-with `/plugin install psp@gtm-operator-skills`). Do not invent the
-pain or the vocabulary. EVPs without a PSP are guesses.
-
-### 2. Generate 3 EVP variants for the tier
-
-Each variant uses the shape but explores a different emphasis:
-
-- **Variant A** — emphasis on the outcome
-- **Variant B** — emphasis on the tradeoff
-- **Variant C** — emphasis on the ICP segment
-
-Validate each against the 22-word constraint.
-
-### 3. Self-check
-
-Score every variant with the deterministic scorer before showing it:
+Score every line before showing it:
 
 ```bash
 python3 ${CLAUDE_PLUGIN_ROOT}/scripts/score_evp.py \
-  --evp "<variant>" --tier <N> --icp "<icp segment>"
+  --evp "<line>" --tier <N> --icp "<icp segment>"
 ```
 
 If `${CLAUDE_PLUGIN_ROOT}` is not expanded (the pack was installed as
 plain skills, not as a plugin), use `scripts/score_evp.py` from the pack
-root. Exit 0 = score ≥70. Rewrite any variant that exits 1 and show the
-score next to each line you deliver. The scorer is a floor, not the
-judge: it cannot tell whether a claim is on the will-claim list, so the
-checklist below still applies.
+root. Exit 0 = score ≥70. Exit 1 prints each reason as
+`- what is wrong → what to change`; rewrite and score again. Add
+`--json` for one JSON object. The scorer is a floor, not the judge: it
+cannot tell whether a claim is on the will-claim list, so the
+[craft](modes/craft.md) self-check still applies.
 
 **One proposition.** Score each line on its own. A draft that holds a
 list (two or more `value_props`, `headlines`, `options`, `pillars`,
 `benefits` or `messages`, or two or more bullet lines in a text file)
 exits 1 with `Refusal: a list of value props is not one proposition`.
 A line that scores 70+ prints under `# Proposition` (`proposition` in
-`--format json`); that one line is what ships.
+`--json`); that one line is what ships.
 
-For each variant, validate:
+If neither `psp` nor `psp_drafts.primary` is in `brand-config.json`,
+stop: the psp pack produces it. Point the user to `/psp:psp` (install
+with `/plugin install psp@gtm-operator-skills`). Do not invent the
+pain or the vocabulary. EVPs without a PSP are guesses.
 
-- [ ] ≤22 words
-- [ ] One specific outcome (no abstract verbs)
-- [ ] One specific tradeoff (no "and more")
-- [ ] ICP named explicitly
-- [ ] Pain matches the PSP's vocabulary
-- [ ] Variant fits the awareness tier (not a Tier-5 line for a Tier-2 reader)
-- [ ] Outcome is on the SOUL.md will-claim list
-- [ ] Proof, if cited, is quoted from the SOUL.md reservoir
+## Finish every run with the next step
 
-### 4. Offer the brief mode
-
-After delivering single-tier EVPs, offer:
-
-> "Want a 3-tier brief — Tier 2 / Tier 3 / Tier 4 EVPs side-by-side
-> with proof per tier?"
-
-## Sub-skills
-
-- [`evp-kickoff`](../evp-kickoff/SKILL.md) — state router for bare `/evp`
-- [`evp-onboarding`](../evp-onboarding/SKILL.md) — first-run brand-config + SOUL setup
-- [`evp-craft`](../evp-craft/SKILL.md) — single-tier EVP generation and critique
-- [`evp-brief`](../evp-brief/SKILL.md) — structured 3-tier brief
+When a line passes and the operator locks it as the `evp` block, end
+with one line: `Next: /cold-email:cold-email` for the first touch (or
+`/landing-page:page` for the hero, `/sales-offer:cold-offer` for a
+give-first offer). If the pack is not installed, give its install line
+(`/plugin install cold-email@gtm-operator-skills`).
 
 ## Works with the suite
 
@@ -204,7 +155,7 @@ This is step 2 of the GTM operator suite (`/plugin marketplace add cmj-hub/gtm-o
 
 - **Reads:** `psp` (fallback `psp_drafts.primary`), `icp`, `competitors`, `primary_outreach_tier` from `brand-config.json` if present.
 - **Writes:** `evp_drafts`, `competitors`, `primary_outreach_tier`, and the chosen outreach line as the `evp` block (`tier`, `primary`, `outcome`, `tradeoff`, `proof`). Merge at the field level; never overwrite another pack's keys.
-- **Before this:** psp (`/psp:psp`), when `brand-config.json` has no `psp` block.
+- **Before this:** psp (`/psp:psp`), when `brand-config.json` has no `psp` block; `/gtm:setup` once, when `operator` or `icp` is empty.
 - **After this:** cold-email (`/cold-email:cold-email`) for the first touch, landing-page (`/landing-page:page`) for the hero, sales-offer (`/sales-offer:cold-offer`) for a give-first offer.
 
 If a companion pack is not installed, name it and its install line (`/plugin install <name>@gtm-operator-skills`); do not do its job inline.
