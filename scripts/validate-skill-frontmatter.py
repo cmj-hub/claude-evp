@@ -8,7 +8,9 @@ enforces:
 - name field present, 1-64 chars, lowercase letters/digits/hyphens
 - name matches the containing directory name
 - description present, 20-1024 chars
-- if `user-invocable: false` is set, sub-skill rules apply
+- every SKILL.md lives at skills/<name>/SKILL.md (the only place a
+  Claude Code plugin discovers skills)
+- relative markdown links in each SKILL.md resolve to a real file
 
 Exits 1 on any violation. Zero non-stdlib deps.
 
@@ -24,6 +26,7 @@ from pathlib import Path
 from typing import Dict, Tuple
 
 ROOT = Path.cwd()
+LINK_RE = re.compile(r"\]\(([^)\s]+)\)")
 NAME_RE = re.compile(r"^[a-z][a-z0-9]*(-[a-z0-9]+)*$")
 
 
@@ -105,6 +108,17 @@ def validate_one(path: Path) -> Tuple[bool, list[str]]:
         issues.append(f"name '{name}' must match /{NAME_RE.pattern}/ (lowercase + hyphens)")
     elif name != dir_name:
         issues.append(f"name '{name}' must match directory '{dir_name}'")
+
+    rel_parts = path.relative_to(ROOT).parts
+    if len(rel_parts) != 3 or rel_parts[0] != "skills":
+        issues.append("must live at skills/<name>/SKILL.md or the plugin will not load it")
+
+    for target in LINK_RE.findall(text):
+        target = target.split("#", 1)[0]
+        if not target or re.match(r"^[a-z]+:", target):
+            continue
+        if not (path.parent / target).exists():
+            issues.append(f"broken relative link: {target}")
 
     if not description:
         issues.append("missing `description` field")

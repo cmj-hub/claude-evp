@@ -20,29 +20,41 @@ Loaded by `evp` on bare invocation, or:
 ## State detection
 
 ```python
+TIER_KEYS = {2: "tier_2_problem_aware", 3: "tier_3_solution_aware", 4: "tier_4_product_aware"}
+primary = brand_config.primary_outreach_tier
 state = {
     "has_brand_config":   file_exists("brand-config.json"),
-    "has_soul":           file_exists("SOUL.md"),
-    "has_psp":            file_exists("brand-config.json") and brand_config.psp.primary_pain != "",
-    "primary_tier_set":   brand_config.primary_outreach_tier in [1,2,3,4,5],
-    "tier_2_locked":      brand_config.evp_drafts.tier_2_problem_aware.primary != "",
-    "tier_3_locked":      brand_config.evp_drafts.tier_3_solution_aware.primary != "",
-    "tier_4_locked":      brand_config.evp_drafts.tier_4_product_aware.primary != "",
+    # The pack ships SOUL.md as a template. Unfilled placeholders = not set up.
+    "has_soul":           file_exists("SOUL.md") and "<e.g." not in soul_text,
+    "has_psp":            brand_config.psp.primary_pain != "",
+    "primary_tier_set":   primary in [1, 2, 3, 4, 5],
+    "locked":             {t: brand_config.evp_drafts[k].primary != "" for t, k in TIER_KEYS.items()},
     "has_proofs":         len(soul.proofs_reservoir) >= 3,
     "has_competitors":    len(brand_config.competitors) > 0,
+    "brief_built":        glob("evp-brief-*.md") != [],
+    "brief_stale":        brief_age_days > brand_config.refresh_cadence_days,  # default 90
 }
 ```
+
+Evaluate top to bottom; the first matching row wins.
 
 | State | Route to |
 |---|---|
 | `!has_brand_config OR !has_soul` | `evp-onboarding` |
 | `!has_psp` | "Install cmj-hub/claude-psp first — EVPs without a PSP are guesses" |
-| `has_psp AND !primary_tier_set` | "Pick your primary outreach tier (most common is Tier 3)" |
-| `primary_tier_set AND !tier_3_locked` (assuming T3 primary) | `evp-craft` (lock primary tier) |
-| `tier_3_locked AND !has_proofs` | "Mine 3 proofs into SOUL.md before publishing the EVP" |
-| `tier_3_locked AND has_proofs AND !tier_2_locked` | `evp-craft` for Tier 2 (problem-reveal variant) |
-| `tiers 2/3/4 locked AND has_competitors` | `evp-brief` (build the 3-tier brief) |
-| `brief_built` | "EVPs operational. Re-run every 90 days. Plug into claude-cold-email next." |
+| `!primary_tier_set` | "Pick your primary outreach tier (most common is Tier 3)" |
+| primary tier not locked | `evp-craft` for the primary tier |
+| `!has_proofs` | "Mine 3 proofs into SOUL.md before publishing the EVP" |
+| `!locked[2]` | `evp-craft` for Tier 2 (reframe) |
+| `!has_competitors` | "Name 2-3 competitors + the axis you beat each on" (Step 6 of `evp-onboarding`) |
+| `!locked[4]` | `evp-craft` for Tier 4 (vendor delta) |
+| `!locked[3]` | `evp-craft` for Tier 3 (category split) |
+| `!brief_built` | `evp-brief` (build the 3-tier brief) |
+| `brief_stale` | `evp-brief` — "Your brief is past its refresh date. Re-score and rebuild." |
+| otherwise | "EVPs operational. Re-run every 90 days. Plug into claude-cold-email next." |
+
+Before routing, report what you detected in one line per item (✓ / ⬜),
+so the operator sees why they landed where they did.
 
 ## Welcome flow
 
@@ -52,6 +64,7 @@ state = {
 Welcome.
 
 [Detected: brand-config.json missing]
+(Example — print the real detected state, not this text.)
 
 You're at step 1 of 5:
 1. ⬜ Onboarding — capture tier + outcomes + tradeoffs + proofs   ← YOU ARE HERE

@@ -12,7 +12,13 @@ Scores any EVP draft 0-100 across 5 axes:
 USAGE:
     python3 score_evp.py --evp "<line>" --tier 3
     python3 score_evp.py --evp "<line>" --tier 3 --icp "Series-B SaaS"
-    python3 score_evp.py --stdin
+    python3 score_evp.py --file examples/t3.good.txt --tier 3
+    echo '{"evp": "<line>", "tier": 3}' | python3 score_evp.py --stdin
+
+EXIT CODES:
+    0  score >= 70 (ship or tighten)
+    1  score < 70 (rewrite)
+    2  bad input
 
 NO LLM. NO network. Pure regex + heuristics.
 """
@@ -24,7 +30,7 @@ import json
 import re
 import sys
 from dataclasses import dataclass, field, asdict
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 
 MAX_INPUT_BYTES = 2_000_000
@@ -68,12 +74,29 @@ VAGUE_TRADEOFFS = {
     "without sacrificing quality",
 }
 
+# Phrases that mark a real tradeoff clause. "without" is the canonical
+# JMC shape; the others carry the same job in Tier 2-4 reframes.
+TRADEOFF_MARKERS = [
+    r"\bwithout\b", r"\binstead of\b", r"\brather than\b",
+    r"\bno need to\b", r"\bwon'?t fix\b", r"\bskip(ping)? the\b",
+]
+
+# Regex hallmarks per Schwartz tier. Word-boundary matched so "vs" does not
+# fire inside other words. "versus"/"vs" is shared by Tier 3 (category split)
+# and Tier 4 (vendor delta). Tier 5 keys on a direct ask or a price-per-period,
+# not on any dollar sign, so a Tier-4 CPM comparison is not read as Tier 5.
 TIER_HALLMARKS = {
-    1: ["if your", "you're losing", "you don't know", "most teams aren't"],
-    2: ["the problem is upstream", "isn't a", "real lever", "not a fix"],
-    3: ["versus", "vs", "instead of", "we ship", "we deliver"],
-    4: ["versus <name>", "compared to", "we beat", "specifically on"],
-    5: ["operator pass", "get started", "$", "/month", "subscribe"],
+    1: [r"\bif your\b", r"\byou'?re losing\b", r"\byou don'?t know\b",
+        r"\bmost teams aren'?t\b"],
+    2: [r"\bthe problem is upstream\b", r"\bisn'?t an? \b", r"\breal lever\b",
+        r"\bnot a fix\b", r"\bwon'?t fix\b"],
+    3: [r"\bversus\b", r"\bvs\.?(?=\s)", r"\binstead of\b", r"\bwe ship\b",
+        r"\bwe deliver\b", r"\bmost teams pick\b", r"\brather than\b"],
+    4: [r"\bversus\b", r"\bvs\.?(?=\s)", r"\bcompared to\b", r"\bwe beat\b",
+        r"\bspecifically on\b", r"\bunlike\b", r"\bswitch(ing)? from\b"],
+    5: [r"\bget started\b", r"\bstart today\b", r"\bbook a (demo|call)\b",
+        r"\bsign up\b", r"\bsubscribe\b", r"\bfree trial\b",
+        r"[$€£]\s?\d[\d,]*(\.\d+)?\s*/\s*(mo|month|seat|user)\b"],
 }
 
 
@@ -105,7 +128,7 @@ def score_length(evp: str) -> AxisScore:
         score -= min(20, (words - 22) * 2)
         notes.append(f"Over 22-word limit by {words - 22}")
     elif words < 8:
-        score -= 3
+        score -= 10
         notes.append("Too short — likely missing a block")
     return AxisScore("length", max(0, score), 20, notes)
 
@@ -122,7 +145,10 @@ def score_outcome(evp: str) -> AxisScore:
         notes.append(f"Abstract verbs: {abstract_hits} — use concrete outcome")
 
     # Look for numbers / metrics
-    has_number = bool(re.search(r"\d+(\.\d+)?\s*(\+|%|\$|x|×|k|K|M|day|week|month|quarter|hour|min|sql|mql|lead|meeting|reply|sec|client|customer|account|deal)", evp_lower))
+    has_number = bool(
+        re.search(r"[$€£]\s?\d", evp_lower)
+        or re.search(r"\d+(\.\d+)?\s*(\+|%|\$|x|×|k|m\b|day|week|month|quarter|hour|min|sql|mql|lead|meeting|reply|sec|client|customer|account|deal)", evp_lower)
+    )
     if not has_number:
         score -= 8
         notes.append("No specific metric / number — outcome should be measurable")
@@ -136,8 +162,8 @@ def score_tradeoff(evp: str) -> AxisScore:
     notes = []
     evp_lower = evp.lower()
 
-    has_without = "without" in evp_lower
-    if not has_without:
+    has_marker = any(re.search(m, evp_lower) for m in TRADEOFF_MARKERS)
+    if not has_marker:
         score -= 10
         notes.append("No 'without <tradeoff>' clause — EVPs need the tradeoff explicit")
     else:
@@ -176,18 +202,25 @@ def score_icp(evp: str, icp: Optional[str]) -> AxisScore:
     return AxisScore("icp", max(0, score), 15, notes)
 
 
-def score_tier_fit(evp: str, requested_tier: Optional[int]) -> AxisScore:
+def detect_tiers(evp: str) -> List[int]:
+    """Every tier whose hallmarks appear in the line, lowest first."""
+    evp_lower = evp.lower()
+    return [
+        tier for tier, hallmarks in TIER_HALLMARKS.items()
+        if any(re.search(h, evp_lower) for h in hallmarks)
+    ]
+
+
+def score_tier_fit(evp: str, requested_tier: Optional[int]) -> Tuple[AxisScore, Optional[int]]:
     """20 points. Detect which tier the line fits + score against requested."""
     score = 20
     notes = []
-    evp_lower = evp.lower()
 
-    matches = []
-    for tier, hallmarks in TIER_HALLMARKS.items():
-        if any(h in evp_lower for h in hallmarks):
-            matches.append(tier)
-
-    detected = matches[0] if matches else None
+    matches = detect_tiers(evp)
+    if requested_tier in matches:
+        detected = requested_tier
+    else:
+        detected = matches[0] if matches else None
 
     if requested_tier is not None:
         if requested_tier in matches:
@@ -260,7 +293,10 @@ def main() -> int:
     parser.add_argument("--evp", default="")
     parser.add_argument("--tier", type=int, default=None, choices=[1, 2, 3, 4, 5])
     parser.add_argument("--icp", default=None)
-    parser.add_argument("--stdin", action="store_true")
+    parser.add_argument("--stdin", action="store_true",
+                        help='read {"evp": ..., "tier": ..., "icp": ...} JSON from stdin')
+    parser.add_argument("--file", default=None,
+                        help="read the EVP line from a text file (e.g. examples/t3.good.txt)")
     parser.add_argument("--format", default="text", choices=["text", "json"])
     args = parser.parse_args()
 
@@ -270,9 +306,21 @@ def main() -> int:
         if not isinstance(evp, str):
             evp = ""
         tier = data.get("tier")
+        if tier is not None and (isinstance(tier, bool) or tier not in (1, 2, 3, 4, 5)):
+            fail_input("tier must be an integer 1-5")
         icp = data.get("icp")
         if icp is not None and not isinstance(icp, str):
             icp = None
+    elif args.file:
+        try:
+            with open(args.file, encoding="utf-8-sig") as fh:
+                evp = fh.read(MAX_INPUT_BYTES + 1).strip()
+        except (OSError, UnicodeDecodeError):
+            fail_input("cannot read --file as UTF-8 text")
+        if len(evp) > MAX_INPUT_BYTES:
+            fail_input("input is too large")
+        tier = args.tier
+        icp = args.icp
     else:
         evp = args.evp
         tier = args.tier

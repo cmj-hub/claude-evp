@@ -1,6 +1,6 @@
 {
   "name": "jmc-evp",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "An Early Value Proposition is a \u226422-word line matched to a Schwartz awareness tier. Same product, five lines, because the unaware buyer and the vendor-comparing buyer are not the same reader.",
   "license": "MIT",
   "bin": {
@@ -8,11 +8,12 @@
   },
   "scripts": {
     "install-skills": "npx -y skills add cmj-hub/claude-evp --all -g --copy --full-depth",
-    "smoke": "bash scripts/smoke-test.sh"
+    "smoke": "bash scripts/smoke-test.sh",
+    "test": "python3 -m unittest discover -s tests"
   },
   "files": [
+    ".claude-plugin",
     "skills",
-    "evp",
     "scripts",
     "examples",
     "AGENTS.md",

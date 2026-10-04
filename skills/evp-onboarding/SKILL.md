@@ -1,7 +1,6 @@
 ---
 name: evp-onboarding
 description: First-run interactive setup for the EVP skill pack. Walks the operator through brand-config.json (awareness tier, outcomes-I-will-claim, proofs reservoir, competitors) and SOUL.md (tier-by-tier voice, won't-claim list, boundaries) in ~10 minutes. Refuses to let the operator skip — generic EVP is worse than no EVP. Loaded automatically when brand-config.json or SOUL.md is missing.
-user-invocable: false
 allowed-tools: Read Write Grep
 license: MIT
 
@@ -17,7 +16,17 @@ instead of generic.
 Loaded automatically by `evp` orchestrator when `brand-config.json`
 or `SOUL.md` is missing.
 
-Also user-invocable: "Set up EVP brand config", "EVP onboarding".
+Also user-invocable: `/evp-onboarding` (plugin: `/evp:evp-onboarding`),
+"Set up EVP brand config", "EVP onboarding".
+
+Templates: `brand-config.example.json` and `SOUL.md` ship at the pack
+root (`${CLAUDE_PLUGIN_ROOT}` in a plugin install). Use them as the
+shape for what you write. If the project already has either file, read
+it, show what is filled, and only ask for the gaps — never overwrite
+without a yes.
+
+Every answer is the operator's own. Do not suggest outcomes, metrics,
+or proofs for them to accept; the examples below show the shape only.
 
 ## Workflow
 
@@ -29,6 +38,9 @@ Quick check — do you already have a PSP?
 If yes (claude-psp is installed and PSP doc exists): I'll pull ICP + pain + vocabulary from there.
 If no: Install cmj-hub/claude-psp first. EVP without a PSP is a guess.
 ```
+
+Save to `brand-config.icp.segment`, `brand-config.psp.primary_pain`,
+and `brand-config.psp.vocabulary` (the buyer's own phrases).
 
 ### Step 2 — Primary outreach tier
 
@@ -73,7 +85,7 @@ Give me 3-5 outcomes you're willing to claim. These constrain every
 downstream EVP variant.
 ```
 
-Save to `SOUL.md` (outcomes-I-will-claim list) + `brand-config.evp_drafts.tier_3.outcome`.
+Save to `SOUL.md` (outcomes-I-will-claim list) + `brand-config.evp_drafts.tier_3_solution_aware.outcome`.
 
 ### Step 4 — Tradeoffs you name
 
@@ -89,7 +101,7 @@ Examples:
   "without paying agency retainer rates"
 ```
 
-Save to `brand-config.evp_drafts.tier_3.tradeoff` + `SOUL.md`.
+Save to `brand-config.evp_drafts.tier_3_solution_aware.tradeoff` + `SOUL.md`.
 
 ### Step 5 — Proofs reservoir
 
@@ -139,7 +151,10 @@ Save to `SOUL.md`.
 
 ### Step 8 — Write the files + smoke test
 
-Write `brand-config.json` + `SOUL.md` at project root. Show:
+Write `brand-config.json` + `SOUL.md` at project root. Replace every
+`<...>` placeholder in the SOUL template — a placeholder left behind
+makes `evp-kickoff` route back here. Leave `evp_drafts.*.primary` empty
+unless the operator already has a line they want to keep. Show:
 
 ```
 ✓ brand-config.json — Tier 3 primary + 3 outcomes + 3 competitors

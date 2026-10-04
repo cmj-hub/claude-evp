@@ -47,24 +47,37 @@ Swap `claude-code` for `cursor`, `codex`, `grok`, `github-copilot`, `windsurf`, 
 /plugin install evp
 ```
 
+Plugin commands are namespaced: `/evp:evp`, `/evp:evp craft 3`, `/evp:evp brief`, `/evp:evp-onboarding`.
+
+## What is in the pack
+
+| Skill | You type | What it does |
+|---|---|---|
+| `evp` | `/evp` | Entry point. Enforces the rules, routes to the right sub-skill, scores every line. |
+| `evp-onboarding` | `/evp-onboarding` | 10-minute setup: writes `brand-config.json` + `SOUL.md` (outcomes you will claim, proofs, competitors, voice). |
+| `evp-kickoff` | `/evp` (no args) | Reads your files, shows what is done, and picks the next step. |
+| `evp-craft` | `/evp craft <tier>` | Three variants for one tier (outcome-, tradeoff-, ICP-led), each scored. Also critiques a pasted line. |
+| `evp-brief` | `/evp brief` | Tier 2 / 3 / 4 side by side with proof and where to deploy each. Writes `evp-brief-<icp>.md`. |
+
+The skill will not write a line until `brand-config.json` and `SOUL.md` exist in your project. It claims only outcomes on your will-claim list and cites only proofs from your reservoir. The rules are in [`AGENTS.md`](./AGENTS.md).
+
 ## What you walk out with in 15 minutes
 
 Artifact: `examples/t3.good.txt`.
 
 ```bash
-python3 scripts/score_evp.py \
-  --evp "For Series-B SaaS in a pipeline gap, we ship 14+ SQLs per month without hiring 2 more SDRs." \
-  --tier 3 --icp "Series-B SaaS"
-python3 scripts/score_evp.py --evp "We help companies improve their growth and optimize outcomes." --tier 3
+python3 scripts/score_evp.py --file examples/t3.good.txt --tier 3 --icp "Series-B SaaS"   # 100, exit 0
+python3 scripts/score_evp.py --file examples/t3.bad.txt --tier 3                          # 59, exit 1
+python3 scripts/score_evp.py --evp "<your line>" --tier 3 --format json
 ```
 
 Three tier lines from the sample Pain Signal Profile. Then yours.
 
+Exit codes: `0` = 70 or above, `1` = rewrite, `2` = bad input. Run `bash scripts/smoke-test.sh` to check the pack itself.
+
 ## What this pack will not do
 
-It will not pick this quarter's PSP. It will not invent proof you did not hand it. It will not write five ads from a blank page.
-
-This pack drafts and scores. It will not pick this quarter's PSP, ingest your CRM, or update when Gmail changes the spam window. Those are judgement calls and live data. This pack gives you the instrument and the rubric; you bring the account.
+This pack drafts and scores. It will not pick this quarter's PSP, invent proof you did not hand it, write five ads from a blank page, ingest your CRM, or update when Gmail changes the spam window. Those are judgement calls and live data. This pack gives you the instrument and the rubric; you bring the account.
 
 ## Why 22 words?
 
