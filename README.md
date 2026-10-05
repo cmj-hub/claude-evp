@@ -23,6 +23,8 @@ python3 scripts/score_evp.py --file examples/t3.bad.txt --tier 3                
 
 Part of the GTM operator suite — `/plugin install gtm@gtm-operator-skills` installs all ten.
 
+Add the [gtm-operator mod](https://github.com/cmj-hub/gtm-operator-claude-mod) to see the suite's next step above your prompt and keep `brand-config.json` from being overwritten: `/plugin install gtm-operator@gtm-operator-skills`.
+
 > Same product. Five readers. Twenty-two words each. Because they are not standing in the same place.
 
 An early value proposition is a line of 22 words or fewer, matched to an awareness tier. Same product, five lines, because the unaware buyer and the vendor-comparing buyer are not the same reader.
