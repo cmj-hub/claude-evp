@@ -98,6 +98,12 @@ Exit codes: `0` = 70 or above, `1` = rewrite (or a list instead of one line), `2
 
 This pack drafts and scores. It will not pick this quarter's PSP, invent proof you did not hand it, write five ads from a blank page, ingest your CRM, or update when Gmail changes the spam window. Those are judgement calls and live data. This pack gives you the instrument and the rubric; you bring the account.
 
+## The data step this pack leaves to you
+
+This pack writes the ≤22-word line. Enriching the person behind the sample Pain Signal Profile is a separate job.
+
+Run [Enrich a person](https://thegtmdirectory.com/jobs/enrich-a-person) on The GTM Directory — tools that fill role, company, and public context so the line lands on a real buyer.
+
 ## Why 22 words?
 
 Long enough for ICP, pain, one outcome, and one tradeoff. Short enough to sit in a cold-email third line or a hero. If it does not fit, you have two claims. Cut one.
