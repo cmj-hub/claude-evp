@@ -25,7 +25,7 @@ The JMC EVP shape is `<outcome> without <tradeoff>`. Your shape:
 
 <3-5 concrete proofs you can cite. Each is anonymized but specific:>
 
-1. <e.g. "Series-B SaaS hit 14 SQLs in 30 days from a PSP rewrite — case study at /case-studies/X">
+1. <e.g. a fictional example: "Series-B SaaS hit 14 SQLs in 30 days from a PSP rewrite — case study at /case-studies/X">
 2. <...>
 
 ## Tier-by-tier voice

@@ -79,7 +79,7 @@ The skill will not write a line until `brand-config.json` and `SOUL.md` exist in
 
 ## What you walk out with in 15 minutes
 
-Artifact: `examples/t3.good.txt`.
+Artifact: `examples/t3.good.txt`. The sample line, its client and its figures are a fictional example, not a JMC result.
 
 ```bash
 python3 scripts/score_evp.py --file examples/t3.good.txt --tier 3 --icp "Series-B SaaS"   # 100, exit 0

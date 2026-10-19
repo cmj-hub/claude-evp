@@ -131,7 +131,7 @@ Save to `brand-config.evp_drafts.tier_3_solution_aware.tradeoff` + `SOUL.md`.
 Give me 3-5 concrete proofs you can cite. Each is anonymized but
 specific.
 
-Examples:
+Examples (fictional, replace with your own):
   "Series-B SaaS hit 14 SQLs in 30 days from a PSP rewrite — case study at /case-studies/X"
   "Bootstrapped agency went 2% → 11% reply rate by killing demographic targeting"
 

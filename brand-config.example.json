@@ -30,7 +30,7 @@
       "primary": "For Series-B SaaS in a pipeline gap, we ship 14+ SQLs/month without hiring 2 more SDRs.",
       "outcome": "14+ SQLs per month",
       "tradeoff": "without hiring 2 more SDRs",
-      "proof": "Series-B SaaS hit 14 SQLs in 30 days from a PSP rewrite."
+      "proof": "Series-B SaaS hit 14 SQLs in 30 days from a PSP rewrite (fictional example)."
     },
     "tier_4_product_aware": {
       "primary": "Versus generic agencies: targeted outbound CPM is $640 vs $2,800. Same volume, 4x efficiency.",
@@ -50,7 +50,7 @@
     "primary": "For Series-B SaaS in a pipeline gap, we ship 14+ SQLs/month without hiring 2 more SDRs.",
     "outcome": "14+ SQLs per month",
     "tradeoff": "without hiring 2 more SDRs",
-    "proof": "Series-B SaaS hit 14 SQLs in 30 days from a PSP rewrite."
+    "proof": "Series-B SaaS hit 14 SQLs in 30 days from a PSP rewrite (fictional example)."
   },
 
   "primary_outreach_tier": 3,
