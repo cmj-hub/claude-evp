@@ -43,7 +43,7 @@ The build guide teaches a human. The pack teaches an agent.
 
 ## What this replaces
 
-A $10K–15K positioning sprint's first output: one hero line, written from inside the building.
+A positioning sprint's first output: one hero line, written from inside the building.
 
 ## Install
 
