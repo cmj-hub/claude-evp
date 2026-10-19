@@ -21,7 +21,7 @@ python3 scripts/score_evp.py --file examples/t3.good.txt --tier 3 --icp "Series-
 python3 scripts/score_evp.py --file examples/t3.bad.txt --tier 3                          # exit 1: - score 59/100 is under 70 → work through the axis lines below, lowest axis first
 ```
 
-Part of the GTM operator suite — `/plugin install gtm@gtm-operator-skills` installs all ten.
+Part of the GTM operator suite: `/plugin install gtm@gtm-operator-skills` installs all ten.
 
 Add the [gtm-operator mod](https://github.com/cmj-hub/gtm-operator-claude-mod) to see the suite's next step above your prompt and keep `brand-config.json` from being overwritten: `/plugin install gtm-operator@gtm-operator-skills`.
 
@@ -29,7 +29,7 @@ Add the [gtm-operator mod](https://github.com/cmj-hub/gtm-operator-claude-mod) t
 
 An early value proposition is a line of 22 words or fewer, matched to an awareness tier. Same product, five lines, because the unaware buyer and the vendor-comparing buyer are not the same reader.
 
-You have been writing one line — the line *you* would buy. That is a Most-Aware line. Most of the people who land on your page are not there. They are still naming the pain, or comparing categories, or lining you up against a vendor they already know.
+You have been writing one line: the line *you* would buy. That is a Most-Aware line. Most of the people who land on your page are not there. They are still naming the pain, or comparing categories, or lining you up against a vendor they already know.
 
 Five stages name where the buyer is standing: unaware, problem-aware, solution-aware, product-aware, most-aware. One product. Five openings. The scorer in this repo checks length, outcome, tradeoff, ICP, and tier-fit.
 
@@ -38,7 +38,7 @@ A specific Tier-3 line scored **100**. "We help companies improve their growth a
 The build guide teaches a human. The pack teaches an agent.
 
 <p align="center">
-  <img src="./assets/demo.gif" alt="Value proposition skill — Tier-3 line 100, vague line 59" width="100%">
+  <img src="./assets/demo.gif" alt="Value proposition skill: Tier-3 line 100, vague line 59" width="100%">
 </p>
 
 ## What this replaces
@@ -102,7 +102,7 @@ This pack drafts and scores. It will not pick this quarter's PSP, invent proof y
 
 This pack writes the ≤22-word line. Enriching the person behind the sample Pain Signal Profile is a separate job.
 
-Run [Enrich a person](https://thegtmdirectory.com/jobs/enrich-a-person) on The GTM Directory — tools that fill role, company, and public context so the line lands on a real buyer.
+Run [Enrich a person](https://thegtmdirectory.com/jobs/enrich-a-person) on The GTM Directory: tools that fill role, company, and public context so the line lands on a real buyer.
 
 ## Why 22 words?
 
@@ -110,7 +110,7 @@ Long enough for ICP, pain, one outcome, and one tradeoff. Short enough to sit in
 
 ## Which tier should I write first?
 
-Tiers 2–4. That is where B2B buyers live. Tier 5 is a direct ask — your internal product view. Unaware (Tier 1) is a pain reveal, not a product sentence.
+Tiers 2–4. That is where B2B buyers live. Tier 5 is a direct ask: your internal product view. Unaware (Tier 1) is a pain reveal, not a product sentence.
 
 ## Do I need Operator Pass to use this?
 
@@ -118,23 +118,23 @@ No, and there is no key to enter. The pack, the scorer, and the sample are MIT. 
 
 ## On the site
 
-- [Early Value Propositions pack](https://jaymountconsulting.com/skills/claude-evp) — this pack's page
-- [Skill packs catalog](https://jaymountconsulting.com/skills) — install paths + every pack
-- [Course twin](https://jaymountconsulting.com/learn/courses/early-value-propositions) — human build guide for this pack
+- [Early Value Propositions pack](https://jaymountconsulting.com/skills/claude-evp): this pack's page
+- [Skill packs catalog](https://jaymountconsulting.com/skills): install paths + every pack
+- [Course twin](https://jaymountconsulting.com/learn/courses/early-value-propositions): human build guide for this pack
 
 ## Free, no signup
 
-- **[EVP Generator](https://jaymountconsulting.com/tools/evp-generator)** — the same job as this pack, hosted. No account, no key.
+- **[EVP Generator](https://jaymountconsulting.com/tools/evp-generator)**: the same job as this pack, hosted. No account, no key.
 - [Early Value Propositions framework](https://jaymountconsulting.com/frameworks/early-value-propositions)
 - [EVP Brief Generator](https://jaymountconsulting.com/tools/evp-brief-generator)
 
 ## Free, by email
 
-[**Growth Audit**](https://jaymountconsulting.com/growth-audit) — where your go-to-market stack is leaking, sent to your inbox.
+[**Growth Audit**](https://jaymountconsulting.com/growth-audit): where your go-to-market stack is leaking, sent to your inbox.
 
 That one does ask for an email, and it enrols you in a short follow-up on the same topic. Unsubscribe whenever.
 
-[**The Friday Signal**](https://jaymountconsulting.com/newsletter/signal): free emails on building GTM systems that compound. No pitch in it. One click unsubscribes.
+[**The Friday Signal**](https://jaymountconsulting.com/newsletter/signal): free emails on building GTM systems. No pitch in it. One click unsubscribes.
 
 
 ## Next
@@ -153,4 +153,4 @@ MIT. See [LICENSE](./LICENSE).
 
 ## About
 
-Built by [Jay Mount Consulting](https://jaymountconsulting.com).
+Built by [JMC Go-to-Market Systems](https://jaymountconsulting.com).

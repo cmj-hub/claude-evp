@@ -23,7 +23,7 @@
 
   "evp_drafts": {
     "tier_2_problem_aware": {
-      "primary": "If your demand-gen motion isn't producing SQLs, hiring 2 more SDRs won't fix it — the problem is upstream.",
+      "primary": "If your demand-gen motion isn't producing SQLs, hiring 2 more SDRs won't fix it: the problem is upstream.",
       "proof": "62% of Series-B SaaS hit this within 18 months of funding."
     },
     "tier_3_solution_aware": {
