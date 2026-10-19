@@ -2,7 +2,7 @@
 name: evp
 description: "Writes and scores an Early Value Proposition (EVP): one line of 22 words or fewer matched to a Schwartz awareness tier, in the shape \"For {ICP} in {pain}, we're the {one team} that does {outcome} without {tradeoff}.\" Builds a 3-tier brief and publishes the chosen outreach line as the evp block. Use when the operator asks for an EVP, value proposition, positioning or hero line, messaging by awareness level, or a line scored. Not for the pain profile under it (use psp), the cold email (use cold-email), or the landing page (use landing-page)."
 argument-hint: "[craft <tier> | brief | score <line> | status | setup]"
-allowed-tools: Read Write Grep Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/score_evp.py:*)
+allowed-tools: Read Write(./gtm/**) Grep Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/score_evp.py:*)
 license: MIT
 models: ""
 
