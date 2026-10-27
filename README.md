@@ -61,6 +61,23 @@ Swap `claude-code` for `cursor`, `codex`, `grok`, `github-copilot`, `windsurf`, 
 
 Claude Code: see [In 60 seconds](#in-60-seconds).
 
+### From npm
+
+The same pack is on npm as [`@jmc-gtm/claude-evp`](https://www.npmjs.com/package/@jmc-gtm/claude-evp), released from this repo's version tags with npm provenance. It has no dependencies and no install scripts.
+
+In a project, for any agent host the skills installer knows (`experimental_sync` is still marked experimental there):
+
+```bash
+npm install -D @jmc-gtm/claude-evp
+npx skills experimental_sync -a claude-code -y
+```
+
+In your own Claude Code plugin marketplace, point an entry at the package:
+
+```json
+{ "name": "evp", "source": { "source": "npm", "package": "@jmc-gtm/claude-evp" } }
+```
+
 ## What is in the pack
 
 One skill, `evp`, with modes. It enforces the rules, routes to the mode, and scores every line.
